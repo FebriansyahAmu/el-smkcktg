@@ -39,10 +39,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
       <div className="px- py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start rtl:justify-end ml-10">
-            <a
-              href="https://flowbite.com"
-              className="flex ms-2 text-xl text-white mr-20"
-            >
+            <a href="/dashboard" className="flex ms-2 text-xl text-white mr-20">
               {/* <img
                 src="https://flowbite.com/docs/images/logo.svg"
                 className="h-8 me-3"
@@ -98,14 +95,11 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                   aria-labelledby="user-menu-button"
                 >
                   <div className="px-4 py-3" role="none">
-                    <p
-                      className="text-sm text-gray-900 dark:text-white"
-                      role="none"
-                    >
+                    <p className="text-sm text-white" role="none">
                       User
                     </p>
                     <p
-                      className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                      className="text-sm font-medium text-white truncate "
                       role="none"
                     >
                       useremail@writeline.site
@@ -115,7 +109,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Profiles
@@ -124,7 +118,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Settings
@@ -133,7 +127,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Log out
