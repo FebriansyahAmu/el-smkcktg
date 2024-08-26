@@ -42,7 +42,7 @@ export default function login() {
                       id="email"
                       name="email"
                       type="email"
-                      className="block w-full h-10 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 leading-6 focus:outline-none"
+                      className="block w-full h-10 rounded-md border-0 py-1.5 px-3 shadow-sm ring-1 ring-inset ring-blue-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 leading-6 focus:outline-none"
                     />
                     <ErrorMessage
                       name="email"
@@ -63,7 +63,7 @@ export default function login() {
                       id="password"
                       name="password"
                       type="password"
-                      className="block w-full h-10 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 leading-6 focus:outline-none"
+                      className="block w-full h-10 rounded-md border-0 py-1.5 px-3 shadow-sm ring-1 ring-inset ring-blue-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 leading-6 focus:outline-none"
                     />
                     <ErrorMessage
                       name="password"
@@ -81,6 +81,15 @@ export default function login() {
                       {isSubmitting ? "Submitting..." : "Login"}
                     </button>
                   </div>
+                  <h3 className="mt-5">
+                    Belum punya akun?{" "}
+                    <a href="/register" className="text-blue-700">
+                      Register
+                    </a>
+                  </h3>
+                  <a href="" className="mt-2 text-blue-700">
+                    Lupa Password?
+                  </a>
                 </div>
               </Form>
             )}

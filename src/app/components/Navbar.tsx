@@ -8,7 +8,7 @@ function Navbar() {
       <div className="container mx-auto flex justify-between items-center">
         <a
           href=""
-          className="flex items-center text-white text-lg font-semibold ml-11"
+          className="flex items-center text-white text-lg lg:text-xl font-semibold ml-11"
         >
           <span className="italic text-blue-700">EL-</span>smkcktg
         </a>
