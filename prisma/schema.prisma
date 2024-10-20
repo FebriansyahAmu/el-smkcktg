@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model certificates {
+  id_certificates Int         @id @default(autoincrement())
+  id_student      Int
+  id_course       Int
+  certificate_url String      @db.VarChar(255)
+  issued_at       DateTime    @default(now()) @db.Timestamp(0)
+  el_courses      el_courses  @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "certificates_ibfk_1")
+  el_students     el_students @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "certificates_ibfk_2")
+
+  @@index([id_course], map: "id_course")
+  @@index([id_student], map: "id_student")
+}
+
+model el_answer {
+  id_answer        Int              @id @default(autoincrement())
+  id_attempt       Int
+  id_question      Int
+  answer           String           @db.Text
+  is_correct       Boolean
+  el_quiz_attempts el_quiz_attempts @relation(fields: [id_attempt], references: [id_attempts], onUpdate: Restrict, map: "el_answer_ibfk_1")
+  el_questions     el_questions     @relation(fields: [id_question], references: [id_questions], onUpdate: Restrict, map: "el_answer_ibfk_2")
+
+  @@index([id_attempt], map: "id_attempt")
+  @@index([id_question], map: "id_question")
+}
+
+model el_assigments {
+  id_assigment   Int              @id @default(autoincrement())
+  id_course      Int
+  id_instructors Int
+  title          String           @db.VarChar(255)
+  description    String           @db.Text
+  due_date       DateTime         @db.DateTime(0)
+  created_at     DateTime         @default(now()) @db.Timestamp(0)
+  updated_at     DateTime         @db.DateTime(0)
+  el_courses     el_courses       @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "el_assigments_ibfk_1")
+  el_instructors el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onUpdate: Restrict, map: "el_assigments_ibfk_2")
+  el_submissions el_submissions[]
+
+  @@index([id_course], map: "id_course")
+  @@index([id_instructors], map: "id_instructors")
+}
+
+model el_comments {
+  id_comment     Int            @id @default(autoincrement())
+  id_discussion  Int
+  id_student     Int
+  id_instructor  Int
+  comment_text   String         @db.Text
+  created_at     DateTime       @default(now()) @db.Timestamp(0)
+  el_discussion  el_discussion  @relation(fields: [id_discussion], references: [id_discussion], onUpdate: Restrict, map: "el_comments_ibfk_1")
+  el_instructors el_instructors @relation(fields: [id_instructor], references: [id_insctructors], onUpdate: Restrict, map: "el_comments_ibfk_2")
+  el_students    el_students    @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_comments_ibfk_3")
+
+  @@index([id_discussion], map: "id_discussion")
+  @@index([id_instructor], map: "id_instructor")
+  @@index([id_student], map: "id_student")
+}
+
+model el_courses {
+  id_course      Int              @id @default(autoincrement())
+  id_instructors Int
+  Title          String           @db.VarChar(100)
+  Descriotion    String           @db.Text
+  created_at     DateTime?        @default(now()) @db.DateTime(0)
+  updated_at     DateTime?        @default(now()) @db.Timestamp(0)
+  certificates   certificates[]
+  el_assigments  el_assigments[]
+  el_instructors el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onUpdate: Restrict, map: "el_courses_ibfk_1")
+  el_discussion  el_discussion[]
+  el_enrollments el_enrollments[]
+  el_lessons     el_lessons[]
+  el_modules     el_modules[]
+
+  @@index([id_instructors], map: "id_instructors")
+}
+
+model el_discussion {
+  id_discussion   Int           @id @default(autoincrement())
+  id_course       Int
+  id_student      Int
+  discussion_text String        @db.Text
+  created_at      DateTime?     @default(now()) @db.Timestamp(0)
+  el_comments     el_comments[]
+  el_courses      el_courses    @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "el_discussion_ibfk_1")
+  el_students     el_students   @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_discussion_ibfk_2")
+
+  @@index([id_course], map: "id_course")
+  @@index([id_student], map: "id_student")
+}
+
+model el_enrollments {
+  id_enrollments    Int                              @id @default(autoincrement())
+  id_student        Int
+  id_course         Int
+  Enrollment_date   DateTime                         @default(now()) @db.Timestamp(0)
+  completion_status el_enrollments_completion_status
+  completion_date   DateTime?                        @db.DateTime(0)
+  el_courses        el_courses                       @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "el_enrollments_ibfk_1")
+  el_students       el_students                      @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_enrollments_ibfk_2")
+
+  @@index([id_course], map: "id_course")
+  @@index([id_student], map: "id_student")
+}
+
+model el_instructors {
+  id_insctructors Int             @id @default(autoincrement())
+  id_users        Int
+  FullName        String          @db.VarChar(100)
+  Email           String          @db.VarChar(100)
+  Bio             String?         @db.Text
+  Expretise       String          @db.VarChar(100)
+  el_assigments   el_assigments[]
+  el_comments     el_comments[]
+  el_courses      el_courses[]
+  el_users        el_users        @relation(fields: [id_users], references: [id], onUpdate: Restrict, map: "el_instructors_ibfk_1")
+
+  @@index([id_users], map: "id_users")
+}
+
+model el_lessons {
+  id_lessons  Int          @id @default(autoincrement())
+  id_course   Int
+  id_modules  Int?
+  Title       String       @db.VarChar(100)
+  Content     String       @db.Text
+  lessonOrder Int?
+  VideoUrl    String?      @db.VarChar(255)
+  created_at  DateTime     @db.DateTime(0)
+  updated_at  DateTime?    @default(now()) @db.Timestamp(0)
+  el_courses  el_courses   @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "el_lessons_ibfk_1")
+  el_modules  el_modules?  @relation(fields: [id_modules], references: [id_modules], onDelete: Restrict, onUpdate: Restrict, map: "el_lessons_ibfk_2")
+  el_quizzes  el_quizzes[]
+
+  @@index([id_course], map: "id_course")
+  @@index([id_modules], map: "id_modules")
+}
+
+model el_modules {
+  id_modules  Int          @id @default(autoincrement())
+  id_course   Int
+  title       String       @db.VarChar(100)
+  description String       @db.VarChar(100)
+  created_at  DateTime     @db.DateTime(0)
+  updated_at  DateTime?    @default(now()) @db.Timestamp(0)
+  el_lessons  el_lessons[]
+  el_courses  el_courses   @relation(fields: [id_course], references: [id_course], onUpdate: Restrict, map: "el_modules_ibfk_1")
+
+  @@index([id_course], map: "id_course")
+}
+
+model el_notifications {
+  id_notif    Int         @id @default(autoincrement())
+  id_student  Int
+  message     String      @db.Text
+  is_read     Boolean
+  craeted_at  DateTime    @default(now()) @db.Timestamp(0)
+  el_students el_students @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_notifications_ibfk_1")
+
+  @@index([id_student], map: "id_student")
+}
+
+model el_questions {
+  id_questions Int               @id @default(autoincrement())
+  id_quizzes   Int
+  Content      String            @db.Text
+  Type         el_questions_Type
+  created_at   DateTime          @db.DateTime(0)
+  updated_at   DateTime          @default(now()) @db.Timestamp(0)
+  el_answer    el_answer[]
+  el_quizzes   el_quizzes        @relation(fields: [id_quizzes], references: [id_quizzes], onUpdate: Restrict, map: "el_questions_ibfk_1")
+
+  @@index([id_quizzes], map: "id_quizzes")
+}
+
+model el_quiz_attempts {
+  id_attempts  Int         @id @default(autoincrement())
+  id_quizzes   Int
+  id_student   Int
+  Score        Int
+  attempted_at DateTime    @db.DateTime(0)
+  completed_at DateTime?   @default(now()) @db.Timestamp(0)
+  el_answer    el_answer[]
+  el_quizzes   el_quizzes  @relation(fields: [id_quizzes], references: [id_quizzes], onUpdate: Restrict, map: "el_quiz_attempts_ibfk_1")
+  el_students  el_students @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_quiz_attempts_ibfk_2")
+
+  @@index([id_quizzes], map: "id_quizzes")
+  @@index([id_student], map: "id_student")
+}
+
+model el_quizzes {
+  id_quizzes       Int                @id @default(autoincrement())
+  id_lessons       Int
+  Title            String             @db.VarChar(255)
+  Description      String             @db.Text
+  created_at       DateTime           @db.DateTime(0)
+  updated_at       DateTime           @default(now()) @db.Timestamp(0)
+  el_questions     el_questions[]
+  el_quiz_attempts el_quiz_attempts[]
+  el_lessons       el_lessons         @relation(fields: [id_lessons], references: [id_lessons], onUpdate: Restrict, map: "el_quizzes_ibfk_1")
+
+  @@index([id_lessons], map: "id_lessons")
+}
+
+model el_students {
+  id_student       Int                @id @default(autoincrement())
+  user_id          Int
+  Jurusan          String?            @db.VarChar(100)
+  Progress         String?            @db.Text
+  Photo_profile    Bytes?
+  certificates     certificates[]
+  el_comments      el_comments[]
+  el_discussion    el_discussion[]
+  el_enrollments   el_enrollments[]
+  el_notifications el_notifications[]
+  el_quiz_attempts el_quiz_attempts[]
+  el_users         el_users           @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "el_students_ibfk_1")
+  el_submissions   el_submissions[]
+
+  @@index([user_id], map: "user_id")
+}
+
+model el_submissions {
+  id_submission Int           @id @default(autoincrement())
+  id_assigment  Int
+  id_student    Int
+  file          Bytes
+  submitted_at  DateTime      @default(now()) @db.Timestamp(0)
+  el_students   el_students   @relation(fields: [id_student], references: [id_student], onUpdate: Restrict, map: "el_submissions_ibfk_1")
+  el_assigments el_assigments @relation(fields: [id_assigment], references: [id_assigment], onUpdate: Restrict, map: "el_submissions_ibfk_2")
+
+  @@index([id_assigment], map: "id_assigment")
+  @@index([id_student], map: "id_student")
+}
+
+model el_users {
+  id             Int              @id @default(autoincrement())
+  NISN           String           @db.VarChar(10)
+  FullName       String           @db.VarChar(100)
+  Email          String           @db.VarChar(100)
+  Password       String           @db.VarChar(255)
+  role           el_users_role
+  Created_at     DateTime         @default(now()) @db.Timestamp(0)
+  updated_at     DateTime         @default(now()) @db.Timestamp(0)
+  isVerified     Boolean?
+  Token          String?          @db.VarChar(255)
+  el_instructors el_instructors[]
+  el_students    el_students[]
+}
+
+enum el_enrollments_completion_status {
+  Progress
+  Completed
+}
+
+enum el_questions_Type {
+  multiple_choice
+  true
+  false
+}
+
+enum el_users_role {
+  Murid
+  Guru
+  Admin
+}
