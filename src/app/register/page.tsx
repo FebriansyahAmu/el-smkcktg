@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Background from "../components/Background";
+import { registerUser } from "../services/userService";
 
 export default function Register() {
   const validationSchema = Yup.object({
@@ -54,11 +55,16 @@ export default function Register() {
                   confirmPassword: "",
                 }}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
+                onSubmit={async (values, { setSubmitting, resetForm }) => {
+                  try {
+                    const result = await registerUser(values);
+                    alert("Registrasi berhasil: " + JSON.stringify(result));
+                    resetForm();
+                  } catch (error: any) {
+                    alert("Error " + error.message);
+                  } finally {
                     setSubmitting(false);
-                  }, 400);
+                  }
                 }}
               >
                 {({ isSubmitting }) => (
