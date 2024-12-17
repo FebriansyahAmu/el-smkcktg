@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import NavDashboard from "../components/NavDashboard";
-import Sidebar from "../components/Sidebar";
+import UserNavDashboard from "../../components/userNavDashboard";
+import UserSidebar from "@/app/components/userSidebar";
 
 export default function Dashboard() {
   // Jangan lupa untuk kapitalisasi nama komponen menjadi `Dashboard`
@@ -13,9 +13,8 @@ export default function Dashboard() {
 
   return (
     <>
-      <NavDashboard toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
+      <UserNavDashboard toggleSidebar={toggleSidebar} />
+      <UserSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       {/* Content goes here */}
       <main></main>
     </>

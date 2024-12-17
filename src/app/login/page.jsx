@@ -3,8 +3,14 @@ import Navbar from "../components/Navbar";
 import Background from "../components/Background";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { signin } from "@/app/actions/auth"; // Use 'signin' instead of 'singin'
+import { useRouter } from "next/navigation";
+import Alerts from "../components/Alerts";
+import { useState } from "react";
 
 export default function login() {
+  const router = useRouter();
+  const [showAlert, setShowAlert] = useState();
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
@@ -14,18 +20,36 @@ export default function login() {
   return (
     <>
       <Navbar />
+
       <section className="min-h-screen overflow-hidden flex justify-center items-center ">
         <Background />
         <div className="p-6 bg-gray-200 rounded max-w-md w-full  lg:max-w-8xl">
           <h2 className="text-2xl font-semibold leading-7 text-gray-700 text-center">
             Login <span className="italic text-blue-700">EL-</span>smkcktg
           </h2>
+
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              setSubmitting(values);
+            onSubmit={async (values, { setSubmitting, setErrors }) => {
+              const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+              });
+
+              const data = await response.json();
+              setSubmitting(false);
+
+              if (!response.ok) {
+                setShowAlert(true);
+              } else {
+                // Jika login berhasil, redirect ke /dashboard
+                setShowAlert(false);
+                router.push(data.redirectUrl);
+              }
             }}
           >
             {({ isSubmitting }) => (
@@ -58,6 +82,7 @@ export default function login() {
                   >
                     Password
                   </label>
+
                   <div className="mt-2">
                     <Field
                       id="password"
@@ -71,14 +96,14 @@ export default function login() {
                       className="mt-2 text-sm text-red-600"
                     />
                   </div>
-
+                  {showAlert && <Alerts />}
                   <div className="col-span-6 flex justify-center mt-7">
                     <button
-                      type="button"
+                      type="submit"
                       disabled={isSubmitting}
                       className="inline-flex justify-center rounded bg-blue-700 py-2 px-6 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
                     >
-                      {isSubmitting ? "Submitting..." : "Login"}
+                      Login
                     </button>
                   </div>
                   <h3 className="mt-5">

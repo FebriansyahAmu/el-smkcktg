@@ -7,7 +7,7 @@ interface SidebarProps {
   toggleSidebar: () => void;
 }
 
-function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
+function UserSidebar({ isOpen, toggleSidebar }: SidebarProps) {
   return (
     <>
       <div
@@ -31,7 +31,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               isOpen ? "opacity-100" : "opacity-0"
             }`}
           >
-            Menu
+            User Dashboard
           </h3>
           <ul className="space-y-2 font-medium">
             <li>
@@ -68,7 +68,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     isOpen ? "block" : "hidden"
                   }`}
                 >
-                  Courses
+                  Course
                 </span>
               </a>
             </li>
@@ -117,4 +117,4 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   );
 }
 
-export default Sidebar;
+export default UserSidebar;

@@ -19,7 +19,7 @@ export const createUser = async (
     const isVerified = false;
     const existingUser = await prisma.el_users.findFirst({
       where: {
-        OR: [{ Email: userData.email }, { NISN: userData.nisn }],
+        OR: [{ Email: userData.email }, { NISN: userData.nisn.toString() }],
       },
     });
 
@@ -31,7 +31,7 @@ export const createUser = async (
 
     const newUser = await prisma.el_users.create({
       data: {
-        NISN: userData.nisn,
+        NISN: userData.nisn.toString(),
         FullName: userData.name,
         Email: userData.email,
         Password: hashedPassword,

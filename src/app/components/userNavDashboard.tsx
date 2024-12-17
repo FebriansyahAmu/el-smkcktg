@@ -1,16 +1,17 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface NavDashboardProps {
   toggleSidebar: () => void;
 }
 
-function NavDashboard({ toggleSidebar }: NavDashboardProps) {
-  const [isOpen, setisOpen] = useState(false);
+function UserNavDashboard({ toggleSidebar }: NavDashboardProps) {
+  // Ubah nama fungsi menjadi UserNavDashboard
+  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
-    setisOpen(!isOpen);
+    setIsOpen(!isOpen);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -18,7 +19,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
     ) {
-      setisOpen(false);
+      setIsOpen(false);
     }
   };
 
@@ -35,10 +36,10 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
   }, [isOpen]);
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-slate-900">
-      <div className="py-3 lg:px-5 lg:pl-3">
+    <nav className="fixed top-0 z-50 w-full bg-slate-900">
+      <div className="px- py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center justify-start ml-0">
+          <div className="flex items-center justify-start rtl:justify-end ml-10">
             <a href="/dashboard" className="flex ms-2 text-xl text-white mr-20">
               <span className="self-center italic text-blue-700 text-xl font-semibold sm:text-2xl whitespace-nowrap">
                 EL-
@@ -48,7 +49,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
             <button
               onClick={toggleSidebar}
               type="button"
-              className="inline-flex p-2 text-sm text-gray-500 rounded-lg hover:bg-slate-800 hover:text-white focus:outline-none"
+              className="ml-26 inline-flex p-2 text-sm text-gray-500 rounded-lg hover:bg-slate-900 hover:text-white focus:outline-none"
             >
               <span className="sr-only">Open sidebar</span>
               <svg
@@ -66,7 +67,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
               </svg>
             </button>
           </div>
-          <div className="flex items-center mr-5">
+          <div className="flex items-center mr-10">
             <div className="relative">
               <button
                 type="button"
@@ -104,7 +105,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-700 hover:text-gray-100"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Profiles
@@ -113,7 +114,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-700 hover:text-gray-100"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Settings
@@ -122,7 +123,7 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
                     <li>
                       <a
                         href="#"
-                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-700 hover:text-gray-100"
+                        className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
                         role="menuitem"
                       >
                         Log out
@@ -139,4 +140,4 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
   );
 }
 
-export default NavDashboard;
+export default UserNavDashboard; // Pastikan diekspor dengan nama yang benar
