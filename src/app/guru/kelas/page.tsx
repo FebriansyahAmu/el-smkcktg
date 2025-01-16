@@ -2,7 +2,7 @@
 import { useState } from "react";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, Label, TextInput, Textarea } from "flowbite-react";
 
 export default function DaftarKelas() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -10,6 +10,19 @@ export default function DaftarKelas() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleValidation = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      setError(true);
+    } else {
+      setError(false);
+    }
   };
 
   return (
@@ -29,10 +42,12 @@ export default function DaftarKelas() {
           {/* Statistik */}
           <button
             type="button"
+            onClick={() => setOpenModal(true)}
             className="flex justify-self-end text-white bg-green-700  font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
             Buat Courses
           </button>
+          {/* <Button>Toggle modal</Button> */}
           <section className="grid lg:ml-0 gap-6 mb-6">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#" className="flex justify-center items-center">
@@ -57,29 +72,46 @@ export default function DaftarKelas() {
               </div>
             </div>
 
-            <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
-              <Modal.Header>Terms of Service</Modal.Header>
+              <Modal.Header>Buat Kelas Baru</Modal.Header>
               <Modal.Body>
                 <div className="space-y-6">
-                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    With less than a month to go before the European Union
-                    enacts new consumer privacy laws for its citizens, companies
-                    around the world are updating their terms of service
-                    agreements to comply.
-                  </p>
-                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    The European Union’s General Data Protection Regulation
-                    (G.D.P.R.) goes into effect on May 25 and is meant to ensure
-                    a common set of data rights in the European Union. It
-                    requires organizations to notify users as soon as possible
-                    of high-risk data breaches that could personally affect
-                    them.
-                  </p>
+                  <form
+                    className="flex max-w-md flex-col gap-4 mx-auto"
+                    onSubmit={handleValidation}
+                  >
+                    <div>
+                      <div className="mb-2 block">
+                        <Label htmlFor="title" value="Title Kelas" />
+                      </div>
+                      <TextInput
+                        id="title"
+                        type="text"
+                        placeholder="Contoh: Rekayasa Perangkat Lunak Kelas XII"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        color={error ? "failure" : undefined} // Warna merah jika error
+                      />
+                      {error && (
+                        <p className="text-sm text-red-600">
+                          <span className="font-medium">Oops!</span> Berikan
+                          title yang valid.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <div className="mb-2 block">
+                        <Label htmlFor="description" value="Description" />
+                      </div>
+                      <Textarea id="description" placeholder="Description" />
+                    </div>
+                    <div className="flex justify-center">
+                      <Button type="submit">Buat Kelas</Button>
+                    </div>
+                  </form>
                 </div>
               </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={() => setOpenModal(false)}>I accept</Button>
+              <Modal.Footer className="justify-end">
                 <Button color="gray" onClick={() => setOpenModal(false)}>
                   Decline
                 </Button>
