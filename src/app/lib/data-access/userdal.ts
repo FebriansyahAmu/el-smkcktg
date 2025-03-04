@@ -11,6 +11,14 @@ export async function findUserByEmail(email: string) {
   });
 }
 
+export async function getInstructorsId(id: number) {
+  return prisma.el_instructors.findFirst({
+    where: {
+      id_users: id,
+    },
+  });
+}
+
 export async function validateUserPassword(
   plainPassword: string,
   hashedPassword: string

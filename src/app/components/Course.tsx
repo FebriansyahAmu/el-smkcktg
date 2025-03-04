@@ -4,49 +4,49 @@ function Course() {
   const courses = [
     {
       title: "Rekayasa Perangkat Lunak",
-      images: "/Images/rpl.jpg",
+      images: "/Images/rpl.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Teknik Komputer dan Jaringan",
-      images: "/Images/tkj.jpg",
+      images: "/Images/tkj.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Teknik Instalasi Tenaga Listrik",
-      images: "/Images/listrik.jpg",
+      images: "/Images/listrik.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Teknik Pemesinan",
-      images: "/Images/mesin.jpg",
+      images: "/Images/mesin.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Teknik Kendaraan Ringan",
-      images: "/Images/tkr.jpg",
+      images: "/Images/tkr.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Teknik Bisnis Sepeda Motor",
-      images: "/Images/tbsm.jpg",
+      images: "/Images/tbsm.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Design Komunikasi Visual / Multimedia",
-      images: "/Images/dkv2.jpg",
+      images: "/Images/dkv2.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
     {
       title: "Design Pemodelan & Informasi Bangungan",
-      images: "/Images/dpib.jpg",
+      images: "/Images/dpib.webp",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis odio sint, mollitia tempora autem consectetur.",
     },
@@ -60,10 +60,11 @@ function Course() {
           {courses.map((course, index) => (
             <div
               key={index}
-              className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+              className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transform will-change-transform transition-transform duration-300 hover:scale-[1.02]"
             >
               <a href="">
                 <img
+                  loading="lazy"
                   className="w-full h-[330px] rounded-t-lg object-cover"
                   src={course.images}
                   alt={course.title}

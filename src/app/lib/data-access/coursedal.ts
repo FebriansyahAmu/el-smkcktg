@@ -1,18 +1,16 @@
-import { PrismaClient, el_courses } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/app/lib/prisma";
 
 interface CreateCourseInput {
-  Title: string;
-  Descriotion: string;
+  title: string;
+  description: string;
   id_instructors: number;
 }
 
 export const createCourse = async (input: CreateCourseInput) => {
   return await prisma.el_courses.create({
     data: {
-      Title: input.Title,
-      Descriotion: input.Descriotion,
+      Title: input.title,
+      Descriotion: input.description,
       id_instructors: input.id_instructors,
     },
   });

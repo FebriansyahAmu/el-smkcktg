@@ -1,6 +1,7 @@
 import React from "react";
 import { AiFillDashboard } from "react-icons/ai";
 import { FaBook, FaCalendarAlt, FaClipboardList } from "react-icons/fa";
+import Link from "next/link";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,8 +36,8 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           </h3>
           <ul className="space-y-2 font-medium">
             <li>
-              <a
-                href="#"
+              <Link
+                href="/dashboard/guru"
                 className="flex items-center text-white p-2 hover:text-slate-700 rounded-lg hover:bg-gray-100 group"
               >
                 <AiFillDashboard
@@ -51,11 +52,11 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 >
                   Dashboard
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                href="/guru/kelas"
                 className="flex items-center text-white p-2 hover:text-slate-700 rounded-lg hover:bg-gray-100 group"
               >
                 <FaBook
@@ -70,7 +71,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 >
                   Courses
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
               <a

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
 import { Button, Modal, Label, TextInput, Textarea } from "flowbite-react";
@@ -12,16 +12,73 @@ export default function DaftarKelas() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const [title, setTitle] = useState("");
-  const [error, setError] = useState(false);
+  // const [title, setTitle] = useState("");
 
-  const handleValidation = (e: React.FormEvent) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+  });
+  const [error, setError] = useState<{ title: boolean; description: boolean }>({
+    title: false,
+    description: false,
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  // useEffect(() => {
+  //   setError((prev) => ({
+  //     ...prev,
+  //     title: formData.title.trim() === "",
+  //   }));
+  // }, [formData.title]);
+
+  const handleValidation = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) {
-      setError(true);
-    } else {
-      setError(false);
+    const newErrors = {
+      title: formData.title.trim() === "",
+      description: formData.description.trim() == "",
+    };
+
+    setError(newErrors);
+    if (newErrors.title || newErrors.description) {
+      return;
+    }
+
+    // if (!formData.title.trim()) {
+    //   setError(true);
+    // } else {
+    //   setError(false);
+    // }
+
+    try {
+      const response = await fetch("/api/courses/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Gagal membuat kelas");
+
+      alert("Kelas berhasil dibuat");
+      setFormData({
+        title: "",
+        description: "",
+      });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      // setLoading(false) ini tambahkan loading spinner nanti yak
     }
   };
 
@@ -51,7 +108,7 @@ export default function DaftarKelas() {
           <section className="grid lg:ml-0 gap-6 mb-6">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#" className="flex justify-center items-center">
-                <img className="rounded-t-lg" src="/Images/logo.png" alt="" />
+                <img className="rounded-t-lg" src="/Images/logo.webp" alt="" />
               </a>
               <div className="p-5">
                 <a href="#">
@@ -87,12 +144,13 @@ export default function DaftarKelas() {
                       <TextInput
                         id="title"
                         type="text"
+                        name="title"
                         placeholder="Contoh: Rekayasa Perangkat Lunak Kelas XII"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        color={error ? "failure" : undefined} // Warna merah jika error
+                        value={formData.title}
+                        onChange={handleChange}
+                        color={error.title ? "failure" : undefined} // Warna merah jika error
                       />
-                      {error && (
+                      {error.title && (
                         <p className="text-sm text-red-600">
                           <span className="font-medium">Oops!</span> Berikan
                           title yang valid.
@@ -103,7 +161,20 @@ export default function DaftarKelas() {
                       <div className="mb-2 block">
                         <Label htmlFor="description" value="Description" />
                       </div>
-                      <Textarea id="description" placeholder="Description" />
+                      <Textarea
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        placeholder="Description"
+                        onChange={handleChange}
+                        color={error.description ? "failure" : undefined}
+                      />
+                      {error.description && (
+                        <p className="text-sm text-red-600">
+                          <span className="font-medium">Oops!</span> Deskripsi
+                          tidak boleh kosong!
+                        </p>
+                      )}
                     </div>
                     <div className="flex justify-center">
                       <Button type="submit">Buat Kelas</Button>
@@ -113,7 +184,7 @@ export default function DaftarKelas() {
               </Modal.Body>
               <Modal.Footer className="justify-end">
                 <Button color="gray" onClick={() => setOpenModal(false)}>
-                  Decline
+                  Batal
                 </Button>
               </Modal.Footer>
             </Modal>

@@ -1,15 +1,33 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { getSession, decrypt } from "@/app/lib/session";
 import { createCourse } from "@/app/lib/data-access/coursedal";
 import { validateCreateCoureseIn } from "@/app/lib/validation/courseValidation";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const startTime = Date.now();
   try {
+    const session = await getSession(request);
+    if (!session || session.role !== "Guru") {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Anda tidak memiliki otorisasi.",
+        },
+        { status: 401 }
+      );
+    }
+    console.log(session.userId);
+
     const body = await request.json();
+
+    const inputData = {
+      ...body,
+      id_instructors: session.id_instructor,
+    };
 
     await validateCreateCoureseIn(body);
 
-    const newCourese = await createCourse(body);
+    const newCourese = await createCourse(inputData);
 
     return NextResponse.json(
       {

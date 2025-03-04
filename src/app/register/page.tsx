@@ -4,6 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Background from "../components/Background";
 import { registerUser } from "../services/userService";
+import Link from "next/link";
 
 export default function Register() {
   const validationSchema = Yup.object({
@@ -37,6 +38,12 @@ export default function Register() {
                 Maxime esse qui rem numquam nulla, ipsa debitis illo velit quis?
                 Enim, molestias.
               </p>
+              <Link
+                href="/register/guru"
+                className="inline-flex items-center justify-center py-2 text-sm font-medium text-blue-700 hover:text-blue-800"
+              >
+                Daftar Sebagai Guru
+              </Link>
             </div>
 
             <div className="w-full md:w-3/4 lg:w-1/2 shadow-lg rounded-lg p-8 bg-white">
@@ -176,7 +183,7 @@ export default function Register() {
                         disabled={isSubmitting}
                         className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-900"
                       >
-                        Register
+                        Register Akun
                       </button>
                     </div>
                   </Form>

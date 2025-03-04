@@ -1,30 +1,31 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="p-6 fixed top-0 left-0 right-0 z-10 w-full bg-slate-900">
       <div className="container mx-auto flex justify-between items-center">
-        <a
-          href=""
+        <Link
+          href="/"
           className="flex items-center text-white text-lg lg:text-xl font-semibold ml-11"
         >
           <span className="italic text-blue-700">EL-</span>smkcktg
-        </a>
+        </Link>
         <div className="hidden md:flex space-x-8 mr-11">
-          <a href="" className="text-gray-300 hover:text-blue-800">
+          <Link href="/" className="text-gray-300 hover:text-blue-800">
             Home
-          </a>
+          </Link>
           <a href="" className="text-gray-300 hover:text-blue-800">
             Course
           </a>
-          <a
-            href=""
+          <Link
+            href="/login"
             className="text-gray-300  border-blue-700 bg-blue-700 px-3 py-0.5 rounded hover:text-white hover:bg-blue-900"
           >
             Login
-          </a>
+          </Link>
         </div>
         <div className="md:hidden">
           <button

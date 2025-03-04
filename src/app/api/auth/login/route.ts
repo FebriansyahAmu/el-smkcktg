@@ -3,6 +3,7 @@ import { SigninFormSchema, SessionPayload } from "@/app/lib/definitions";
 import {
   findUserByEmail,
   validateUserPassword,
+  getInstructorsId,
 } from "@/app/lib/data-access/userdal";
 import { createSession } from "@/app/lib/session";
 
@@ -44,10 +45,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const instructorsId = await getInstructorsId(user.id);
+
   const sessionPayload: SessionPayload = {
     userId: user.id,
     fullname: user.FullName,
     role: user.role,
+    ...(user.role === "Guru" && {
+      id_instructor: instructorsId?.id_insctructors,
+    }),
   };
 
   await createSession(sessionPayload);

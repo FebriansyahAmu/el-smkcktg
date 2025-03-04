@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 interface NavDashboardProps {
   toggleSidebar: () => void;
@@ -39,12 +40,12 @@ function NavDashboard({ toggleSidebar }: NavDashboardProps) {
       <div className="py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start ml-0">
-            <a href="/dashboard" className="flex ms-2 text-xl text-white mr-20">
+            <Link href="/" className="flex ms-2 text-xl text-white mr-20">
               <span className="self-center italic text-blue-700 text-xl font-semibold sm:text-2xl whitespace-nowrap">
                 EL-
               </span>
               smkcktg
-            </a>
+            </Link>
             <button
               onClick={toggleSidebar}
               type="button"

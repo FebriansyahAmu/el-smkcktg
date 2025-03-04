@@ -19,7 +19,6 @@ model certificates {
 
   @@index([id_course], map: "id_course")
   @@index([id_student], map: "id_student")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -34,7 +33,6 @@ model el_answer {
 
   @@index([id_attempt], map: "id_attempt")
   @@index([id_question], map: "id_question")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -53,7 +51,6 @@ model el_assigments {
 
   @@index([id_course], map: "id_course")
   @@index([id_instructors], map: "id_instructors")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -71,7 +68,6 @@ model el_comments {
   @@index([id_discussion], map: "id_discussion")
   @@index([id_instructor], map: "id_instructor")
   @@index([id_student], map: "id_student")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -91,7 +87,6 @@ model el_courses {
   el_modules     el_modules[]
 
   @@index([id_instructors], map: "id_instructors")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -107,7 +102,6 @@ model el_discussion {
 
   @@index([id_course], map: "id_course")
   @@index([id_student], map: "id_student")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -123,7 +117,6 @@ model el_enrollments {
 
   @@index([id_course], map: "id_course")
   @@index([id_student], map: "id_student")
- 
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -140,7 +133,6 @@ model el_instructors {
   el_users        el_users        @relation(fields: [id_users], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "el_instructors_ibfk_1")
 
   @@index([id_users], map: "id_users")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -160,7 +152,6 @@ model el_lessons {
 
   @@index([id_course], map: "id_course")
   @@index([id_modules], map: "id_modules")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -175,7 +166,6 @@ model el_modules {
   el_courses  el_courses   @relation(fields: [id_course], references: [id_course], onDelete: NoAction, onUpdate: NoAction, map: "el_modules_ibfk_1")
 
   @@index([id_course], map: "id_course")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -188,7 +178,6 @@ model el_notifications {
   el_students el_students @relation(fields: [id_student], references: [id_student], onDelete: NoAction, onUpdate: NoAction, map: "el_notifications_ibfk_1")
 
   @@index([id_student], map: "id_student")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -203,7 +192,6 @@ model el_questions {
   el_quizzes   el_quizzes        @relation(fields: [id_quizzes], references: [id_quizzes], onDelete: NoAction, onUpdate: NoAction, map: "el_questions_ibfk_1")
 
   @@index([id_quizzes], map: "id_quizzes")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -220,7 +208,6 @@ model el_quiz_attempts {
 
   @@index([id_quizzes], map: "id_quizzes")
   @@index([id_student], map: "id_student")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -236,7 +223,6 @@ model el_quizzes {
   el_lessons       el_lessons         @relation(fields: [id_lessons], references: [id_lessons], onDelete: NoAction, onUpdate: NoAction, map: "el_quizzes_ibfk_1")
 
   @@index([id_lessons], map: "id_lessons")
-
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -256,7 +242,6 @@ model el_students {
   el_submissions   el_submissions[]
 
   @@index([user_id], map: "user_id")
-
 }
 
 model el_submissions {
@@ -270,12 +255,11 @@ model el_submissions {
 
   @@index([id_assigment], map: "id_assigment")
   @@index([id_student], map: "id_student")
-
 }
 
 model el_users {
   id             Int              @id @default(autoincrement())
-  NISN           String           @unique(map: "NISN_UNIQUE") @db.VarChar(10)
+  NISN           String?          @unique(map: "NISN_UNIQUE") @db.VarChar(10)
   FullName       String           @db.VarChar(100)
   Email          String           @unique(map: "Email_UNIQUE") @db.VarChar(100)
   Password       String           @db.VarChar(255)

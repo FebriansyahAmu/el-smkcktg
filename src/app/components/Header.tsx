@@ -14,7 +14,7 @@ function Header() {
     <section
       className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{
-        backgroundImage: "url('/Images/students.jpg')",
+        backgroundImage: "url('/Images/students.webp')",
         backgroundAttachment: "fixed",
         backgroundPositionY: `${offsetY * 0.05}px`, // Parallax effect reduced
       }}
