@@ -3,10 +3,14 @@ import { useState, useEffect } from "react";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
 import { Button, Modal, Label, TextInput, Textarea } from "flowbite-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchCourses } from "@/app/services/getCourses";
 
 export default function DaftarKelas() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -39,6 +43,53 @@ export default function DaftarKelas() {
   //   }));
   // }, [formData.title]);
 
+  //fetching data to api
+
+  interface Course {
+    id_course: number;
+    title: string;
+    description: string;
+  }
+
+  const addCourseMutation = useMutation<
+    Course,
+    Error,
+    { title: string; description: string },
+    { previousCourses?: Course[] }
+  >({
+    mutationFn: async (newCourse) => {
+      console.log("Submitting course:", newCourse); // ✅ Debugging
+
+      const response = await fetch("/api/courses/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCourse),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Gagal membuat kelas");
+      }
+
+      return response.json();
+    },
+
+    onSuccess: (data) => {
+      alert(data.message || "Kelas berhasil dibuat!"); // ✅ Menampilkan alert sukses
+    },
+
+    onError: (err, newCourse, context) => {
+      console.error("Mutation error:", err); // ✅ Debugging
+      if (context?.previousCourses) {
+        queryClient.setQueryData(["courses"], context.previousCourses);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+    },
+  });
+
   const handleValidation = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -51,36 +102,23 @@ export default function DaftarKelas() {
     if (newErrors.title || newErrors.description) {
       return;
     }
-
-    // if (!formData.title.trim()) {
-    //   setError(true);
-    // } else {
-    //   setError(false);
-    // }
-
     try {
-      const response = await fetch("/api/courses/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Gagal membuat kelas");
-
-      alert("Kelas berhasil dibuat");
-      setFormData({
-        title: "",
-        description: "",
-      });
+      console.log("Sending data:", formData); // ✅ Debugging
+      await addCourseMutation.mutateAsync(formData);
+      setFormData({ title: "", description: "" });
     } catch (err: any) {
       setError(err.message);
     } finally {
       // setLoading(false) ini tambahkan loading spinner nanti yak
     }
   };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["courses"],
+    queryFn: fetchCourses,
+  });
+
+  const courses = data?.data || [];
 
   return (
     <div className="flex h-screen overflow-auto bg-gray-100">
@@ -105,90 +143,99 @@ export default function DaftarKelas() {
             Buat Courses
           </button>
           {/* <Button>Toggle modal</Button> */}
-          <section className="grid lg:ml-0 gap-6 mb-6">
-            <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <a href="#" className="flex justify-center items-center">
-                <img className="rounded-t-lg" src="/Images/logo.webp" alt="" />
-              </a>
-              <div className="p-5">
-                <a href="#">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    Noteworthy technology acquisitions 2021
-                  </h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Here are the biggest enterprise technology acquisitions of
-                  2021 so far, in reverse chronological order.
-                </p>
-                {/* <a
-                  href="#"
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Read more
-                </a> */}
-              </div>
-            </div>
-
-            <Modal show={openModal} onClose={() => setOpenModal(false)}>
-              <Modal.Header>Buat Kelas Baru</Modal.Header>
-              <Modal.Body>
-                <div className="space-y-6">
-                  <form
-                    className="flex max-w-md flex-col gap-4 mx-auto"
-                    onSubmit={handleValidation}
-                  >
-                    <div>
-                      <div className="mb-2 block">
-                        <Label htmlFor="title" value="Title Kelas" />
-                      </div>
-                      <TextInput
-                        id="title"
-                        type="text"
-                        name="title"
-                        placeholder="Contoh: Rekayasa Perangkat Lunak Kelas XII"
-                        value={formData.title}
-                        onChange={handleChange}
-                        color={error.title ? "failure" : undefined} // Warna merah jika error
-                      />
-                      {error.title && (
-                        <p className="text-sm text-red-600">
-                          <span className="font-medium">Oops!</span> Berikan
-                          title yang valid.
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <div className="mb-2 block">
-                        <Label htmlFor="description" value="Description" />
-                      </div>
-                      <Textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        placeholder="Description"
-                        onChange={handleChange}
-                        color={error.description ? "failure" : undefined}
-                      />
-                      {error.description && (
-                        <p className="text-sm text-red-600">
-                          <span className="font-medium">Oops!</span> Deskripsi
-                          tidak boleh kosong!
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex justify-center">
-                      <Button type="submit">Buat Kelas</Button>
-                    </div>
-                  </form>
+          <section className="grid lg:ml-0 gap-2 lg:grid-cols-3 md:grid-cols-2  justify-center items-center mb-6 mx-auto">
+            {courses.map((course: any) => {
+              return (
+                <div className="max-w-sm gap-2 mt-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                  <a href="#" className="flex justify-center items-center">
+                    <img
+                      className="rounded-t-lg"
+                      src="/Images/logo.webp"
+                      alt=""
+                    />
+                  </a>
+                  <div className="p-5">
+                    <a href="#">
+                      <h5
+                        className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                        key={course.id_course}
+                      >
+                        {course.Title}
+                      </h5>
+                    </a>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                      {course.Description}
+                    </p>
+                    <a
+                      href={`/guru/kelas/${course.id_course}`}
+                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Read more
+                    </a>
+                  </div>
                 </div>
-              </Modal.Body>
-              <Modal.Footer className="justify-end">
-                <Button color="gray" onClick={() => setOpenModal(false)}>
-                  Batal
-                </Button>
-              </Modal.Footer>
-            </Modal>
+              );
+            })}
           </section>
+          <Modal show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal.Header>Buat Kelas Baru</Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <form
+                  className="flex max-w-md flex-col gap-4 mx-auto"
+                  onSubmit={handleValidation}
+                >
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="title" value="Title Kelas" />
+                    </div>
+                    <TextInput
+                      id="title"
+                      type="text"
+                      name="title"
+                      placeholder="Contoh: Rekayasa Perangkat Lunak Kelas XII"
+                      value={formData.title}
+                      onChange={handleChange}
+                      color={error.title ? "failure" : undefined} // Warna merah jika error
+                    />
+                    {error.title && (
+                      <p className="text-sm text-red-600">
+                        <span className="font-medium">Oops!</span> Berikan title
+                        yang valid.
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="description" value="Description" />
+                    </div>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      placeholder="Description"
+                      onChange={handleChange}
+                      color={error.description ? "failure" : undefined}
+                    />
+                    {error.description && (
+                      <p className="text-sm text-red-600">
+                        <span className="font-medium">Oops!</span> Deskripsi
+                        tidak boleh kosong!
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex justify-center">
+                    <Button type="submit">Buat Kelas</Button>
+                  </div>
+                </form>
+              </div>
+            </Modal.Body>
+            <Modal.Footer className="justify-end">
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                Batal
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </main>
       </div>
     </div>

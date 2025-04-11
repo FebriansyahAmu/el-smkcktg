@@ -2,9 +2,10 @@ import { prisma } from "@/app/lib/prisma";
 import { getCoursesDTO } from "../dto/courseDTO";
 
 export class CourseDAL {
-  async getAllCourses(): Promise<getCoursesDTO[]> {
+  async getAllCourses(id_instructors?: number): Promise<getCoursesDTO[]> {
     try {
       const courses = await prisma.el_courses.findMany({
+        where: id_instructors ? { id_instructors } : {},
         select: {
           id_course: true,
           id_instructors: true,
@@ -13,7 +14,6 @@ export class CourseDAL {
           created_at: true,
         },
       });
-
       return courses.map((data) => ({
         id_course: data.id_course,
         id_instructors: data.id_instructors,
