@@ -6,7 +6,7 @@ interface CreateModulInput {
   description: string;
 }
 
-export const createCourse = async (input: CreateModulInput) => {
+export const createModul = async (input: CreateModulInput) => {
   return await prisma.el_modules.create({
     data: {
       id_course: input.id_course,
