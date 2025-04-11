@@ -6,6 +6,8 @@ export const createCourseSchema = yup.object({
   // instructorId: yup.number().required().positive().integer(),
 });
 
-export async function validateCreateCoureseIn(input: any) {
+export type CreateCourseInput = yup.InferType<typeof createCourseSchema>;
+
+export async function validateCreateCoureseIn(input: CreateCourseInput) {
   return await createCourseSchema.validate(input, { abortEarly: false });
 }
