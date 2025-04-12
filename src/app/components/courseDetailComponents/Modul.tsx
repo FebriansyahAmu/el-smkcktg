@@ -11,9 +11,13 @@ import {
   Textarea,
 } from "flowbite-react";
 import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 function Modul() {
   const [openModal, setOpenModal] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -41,6 +45,43 @@ function Modul() {
   //   }));
   // }, [formData.title]);
 
+  interface Modul {
+    id_Course: number;
+    title: string;
+    description: string;
+  }
+
+  const addModulMutation = useMutation<
+    Modul,
+    Error,
+    { id_course: number; title: string; description: string },
+    { previouseModul?: Modul[] }
+  >({
+    mutationFn: async (newModul) => {
+      const response = await fetch("api/modul/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newModul),
+      });
+
+      return response.json();
+    },
+
+    onSuccess: (data) => {
+      alert(data.message || "Modul berhasil dibuat");
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["modules"] });
+    },
+
+    onError: (err, newModul, context) => {
+      if (context?.previouseModul) {
+        queryClient.setQueryData(["modules"], context.previouseModul);
+      }
+    },
+  });
+
   const handleValidation = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -52,6 +93,21 @@ function Modul() {
     setError(newErrors);
     if (newErrors.title || newErrors.description) {
       return;
+    }
+
+    const params = useParams();
+    const id_course = Number(params.id);
+
+    try {
+      addModulMutation.mutate({
+        id_course: id_course,
+        title: formData.title,
+        description: formData.description,
+      });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      //setLoading(false) nanti
     }
   };
 
