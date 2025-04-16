@@ -4,9 +4,18 @@ import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
 import Modul from "@/app/components/courseDetailComponents/Modul";
 import { TabItem, Tabs } from "flowbite-react";
+import { useParams } from "next/navigation";
 
-function CourseDetail() {
+type CourseDetailPageProps = {
+  params: {
+    id: number;
+  };
+};
+
+export default function CourseDetail({ params }: CourseDetailPageProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const id_course = Number(params.id);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -25,7 +34,7 @@ function CourseDetail() {
         <main className="mt-14 p-4 md:ml-14 md:p-7 lg:ml-0 lg:p-7">
           <Tabs aria-label="Default tabs" variant="default">
             <TabItem title="Modul">
-              <Modul />
+              <Modul id_course={id_course} />
             </TabItem>
             <TabItem title="Tugas">Tugas</TabItem>
             <TabItem title="Murid">Tugas</TabItem>
@@ -36,5 +45,3 @@ function CourseDetail() {
     </div>
   );
 }
-
-export default CourseDetail;
