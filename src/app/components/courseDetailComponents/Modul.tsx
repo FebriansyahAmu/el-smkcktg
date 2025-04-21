@@ -11,7 +11,7 @@ import {
   Textarea,
 } from "flowbite-react";
 import { useState, useEffect } from "react";
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 type ModulProps = {
@@ -21,7 +21,7 @@ type ModulProps = {
 const Modul = ({ id_course }: ModulProps) => {
   const [openModal, setOpenModal] = useState(false);
 
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -55,36 +55,36 @@ const Modul = ({ id_course }: ModulProps) => {
     description: string;
   }
 
-  // const addModulMutation = useMutation<
-  //   Modul,
-  //   Error,
-  //   { id_course: number; title: string; description: string },
-  //   { previouseModul?: Modul[] }
-  // >({
-  //   mutationFn: async (newModul) => {
-  //     const response = await fetch("api/moduls/create", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(newModul),
-  //     });
+  const addModulMutation = useMutation<
+    Modul,
+    Error,
+    { id_course: number; title: string; description: string },
+    { previouseModul?: Modul[] }
+  >({
+    mutationFn: async (newModul) => {
+      const response = await fetch("/api/moduls/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newModul),
+      });
 
-  //     return response.json();
-  //   },
+      return response.json();
+    },
 
-  //   onSuccess: (data) => {
-  //     alert(data.message || "Modul berhasil dibuat");
-  //   },
+    onSuccess: (data) => {
+      alert(data.message || "Modul berhasil dibuat");
+    },
 
-  //   onSettled: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["modules"] });
-  //   },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["modules"] });
+    },
 
-  //   onError: (err, newModul, context) => {
-  //     if (context?.previouseModul) {
-  //       queryClient.setQueryData(["modules"], context.previouseModul);
-  //     }
-  //   },
-  // });
+    onError: (err, newModul, context) => {
+      if (context?.previouseModul) {
+        queryClient.setQueryData(["modules"], context.previouseModul);
+      }
+    },
+  });
 
   const handleValidation = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,9 +99,6 @@ const Modul = ({ id_course }: ModulProps) => {
       return;
     }
 
-    const params = useParams();
-    const id_course = Number(params.id);
-
     const sendingData = {
       ...formData,
       id_course,
@@ -109,21 +106,7 @@ const Modul = ({ id_course }: ModulProps) => {
 
     try {
       //fetch kirim form disini
-      const response = await fetch("/api/moduls/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sendingData),
-      });
-
-      if (!response.ok) {
-        throw new Error("gagal mengirim data");
-      }
-      alert("modul berhasil dibuat");
-      const result = await response.json();
-      console.log("data: ", result);
-
+      await addModulMutation.mutateAsync(sendingData);
       setFormData({ title: "", description: "" });
     } catch (err: any) {
       setError(err.message);
