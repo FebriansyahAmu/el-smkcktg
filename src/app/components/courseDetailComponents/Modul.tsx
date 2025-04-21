@@ -12,7 +12,7 @@ import {
 } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { fetchModules } from "@/app/services/getModules";
 
 type ModulProps = {
   id_course: number;
@@ -115,35 +115,41 @@ const Modul = ({ id_course }: ModulProps) => {
     }
   };
 
-  // const {data, isLoading} = useQuery({
-  //   queryKey: ["modules"],
-  //   queryFn:
-  // })
+  const { data, isLoading } = useQuery({
+    queryKey: ["modules"],
+    queryFn: () => fetchModules(id_course),
+    enabled: !!id_course,
+  });
+
+  const modul = data?.data || [];
 
   return (
     <>
       <div className="flex justify-end">
         <Button onClick={() => setOpenModal(true)}>Tambah Modul</Button>
       </div>
-      <a
-        href="#"
-        className="flex flex-col mt-4 w-full items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 "
-      >
-        <img
-          className="object-cover w-full rounded-t-lg h-96 md:h-full md:w-48 md:rounded-none md:rounded-s-lg"
-          src="/Images/logo.webp"
-          alt=""
-        />
-        <div className="flex flex-col justify-between p-4 leading-normal">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </div>
-      </a>
+      {modul.map((modul: any) => {
+        return (
+          <a
+            href="#"
+            className="flex flex-col mt-4 w-full items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 "
+          >
+            <img
+              className="object-cover w-full rounded-t-lg h-96 md:h-full md:w-48 md:rounded-none md:rounded-s-lg"
+              src="/Images/logo.webp"
+              alt=""
+            />
+            <div className="flex flex-col justify-between p-4 leading-normal">
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {modul.title}
+              </h5>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {modul.description}
+              </p>
+            </div>
+          </a>
+        );
+      })}
       {/* modal goes here */}
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Tambah Modul</ModalHeader>

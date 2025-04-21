@@ -1,8 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getSession } from "@/app/lib/session";
-import { createModul } from "@/app/lib/data-access/moduldal";
+import { ModulsDAL } from "@/app/lib/data-access/moduldal";
 import { validateModulInput } from "@/app/lib/validation/modulValidation";
 import { ValidationError } from "yup";
+
+const modulDal = new ModulsDAL();
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +24,7 @@ export async function POST(request: NextRequest) {
     await validateModulInput(body);
 
     //fire up! get sucked into dtabase
-    await createModul(body);
+    await modulDal.createModul(body);
 
     return NextResponse.json(
       {
