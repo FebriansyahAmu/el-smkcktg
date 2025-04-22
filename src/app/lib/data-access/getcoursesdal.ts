@@ -26,7 +26,7 @@ export class CourseDAL {
       if (process.env.NODE_ENV === "production") {
         return [];
       } else {
-        throw new Error("Failed to fetch courses");
+        throw err;
       }
     }
   }
