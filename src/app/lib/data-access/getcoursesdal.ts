@@ -30,4 +30,16 @@ export class CourseDAL {
       }
     }
   }
+
+  async getCourseById(id_course: number) {
+    if (!id_course) {
+      throw new Error("invalid course ID");
+    }
+
+    const course = await prisma.el_courses.findUnique({
+      where: { id_course },
+    });
+
+    return course;
+  }
 }
