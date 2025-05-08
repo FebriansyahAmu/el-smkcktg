@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const id_course = searchParams.get("courses");
 
     const course = await coursedal.getCourseById(Number(id_course));
-    if (!course || course.id_instructors !== session.id_instructors) {
+    if (!course || course.id_instructors !== session.id_instructor) {
       return NextResponse.json(
         {
           status: "error",

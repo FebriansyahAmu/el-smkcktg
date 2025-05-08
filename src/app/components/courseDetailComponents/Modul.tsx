@@ -13,6 +13,8 @@ import {
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchModules } from "@/app/services/getModules";
+import { FaEye, FaEdit } from "react-icons/fa";
+import Link from "next/link";
 
 type ModulProps = {
   id_course: number;
@@ -130,24 +132,42 @@ const Modul = ({ id_course }: ModulProps) => {
       </div>
       {modul.map((modul: any) => {
         return (
-          <a
-            href="#"
-            className="flex flex-col mt-4 w-full items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 "
-          >
-            <img
-              className="object-cover w-full rounded-t-lg h-96 md:h-full md:w-48 md:rounded-none md:rounded-s-lg"
-              src="/Images/logo.webp"
-              alt=""
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {modul.title}
-              </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {modul.description}
-              </p>
+          <div className="w-full mt-4">
+            <div className="flex w-full flex-col items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row hover:bg-gray-100 transition">
+              <div className="w-full md:w-48 h-96 md:h-full ">
+                <img
+                  className="object-cover w-full rounded-t-lg h-96 md:h-full md:w-48 md:rounded-none md:rounded-s-lg"
+                  src="/Images/logo.webp"
+                  alt=""
+                />
+              </div>
+              <div className="flex w-full  flex-col justify-between p-10 leading-normal">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                  {modul.title}
+                </h5>
+                <p className="mb-3 font-normal text-gray-700">
+                  {modul.description}
+                </p>
+              </div>
+              <div className="flex justify-end gap-2 p-5">
+                <Link
+                  href={`/guru/kelas/${modul.id_course}/modul/${modul.id_modules}`}
+                  className="inline-flex items-center gap-2 px-4  py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                  aria-label="Lihat detail modul"
+                >
+                  <FaEye /> View content
+                </Link>
+
+                <Link
+                  href={`/guru/kelas/${modul.id_course}/modul/${modul.id_modules}/edit`}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                  aria-label="Edit modul"
+                >
+                  <FaEdit /> Edit content
+                </Link>
+              </div>
             </div>
-          </a>
+          </div>
         );
       })}
       {/* modal goes here */}
