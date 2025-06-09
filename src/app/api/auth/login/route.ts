@@ -6,6 +6,7 @@ import {
   getInstructorsId,
 } from "@/app/lib/data-access/userdal";
 import { createSession } from "@/app/lib/session";
+import { ValidationError } from "yup";
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
       { abortEarly: false }
     );
   } catch (error) {
-    if (error instanceof SigninFormSchema.ValidationError) {
+    if (error instanceof ValidationError) {
       const errors = error.inner.reduce((acc, curr) => {
         if (curr.path) acc[curr.path] = curr.message;
         return acc;

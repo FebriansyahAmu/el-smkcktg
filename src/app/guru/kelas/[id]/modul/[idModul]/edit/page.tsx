@@ -66,7 +66,6 @@ export default function EditContentModul({ params }: PropsParams) {
     const insert = (items: SectionType[], level = 1): SectionType[] =>
       items.map((item) => {
         if (item.tempId === parentTempId) {
-          // Hanya izinkan tambah anak jika level < 2
           if (level >= 2) return item;
 
           const newChild: SectionType = {
@@ -76,7 +75,7 @@ export default function EditContentModul({ params }: PropsParams) {
             title: "",
             content: "",
             order: 1,
-            children: [], // sub-section tidak boleh punya anak
+            children: [],
           };
 
           return {

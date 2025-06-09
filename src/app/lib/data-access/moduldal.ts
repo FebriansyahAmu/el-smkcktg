@@ -7,6 +7,15 @@ interface CreateModulInput {
   description: string;
 }
 
+interface EditModulContents {
+  id_section: null;
+  id_modules: number;
+  parent_id: number;
+  title: string;
+  order: number;
+  content: string;
+}
+
 export class ModulsDAL {
   async createModul(input: CreateModulInput) {
     return await prisma.el_modules.create({
@@ -44,6 +53,33 @@ export class ModulsDAL {
       } else {
         throw err;
       }
+    }
+  }
+
+  async editModulesContents(input: EditModulContents) {
+    if (input.id_section) {
+      // Jika id_section disediakan, lakukan update pada record yang sesuai
+      return prisma.el_module_sections.update({
+        where: { id_section: input.id_section },
+        data: {
+          title: input.title,
+          content: input.content,
+          order: input.order,
+          parent_id: input.parent_id,
+        },
+      });
+    } else {
+      // Jika tidak ada id_section, buat section/sub-section baru
+      return prisma.el_module_sections.create({
+        data: {
+          id_module: input.id_modules,
+          parent_id: input.parent_id,
+          title: input.title,
+          content: input.content,
+          order: input.order,
+          created_at: new Date(),
+        },
+      });
     }
   }
 }
