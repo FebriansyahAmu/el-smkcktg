@@ -5,6 +5,9 @@ import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FiSave } from "react-icons/fi";
 
 type PropsParams = {
   params: {
@@ -105,13 +108,64 @@ export default function EditContentModul({ params }: PropsParams) {
     setSections(remove(sections));
   };
 
+  const saveSection = async (parentTempId: string) => {
+    const parentSection = sections.find((s) => s.tempId === parentTempId);
+
+    if (!parentSection) {
+      console.error("Parent section tidak ditemukan");
+      return;
+    }
+
+    const res = await fetch("/api/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: parentSection.title.trim(),
+        content: parentSection.content.trim(),
+        parent_id: null,
+        id_module: params.idModul,
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("Gagal menyimpan parent section");
+      return;
+    }
+
+    const savedParent = await res.json();
+    const parentIdFromDB = savedParent.id;
+
+    const children = parentSection.children || [];
+
+    if (children.length > 0) {
+      await fetch("/api/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          children.map((child) => ({
+            title: child.title.trim(),
+            content: child.content.trim(),
+            parent_id: parentIdFromDB,
+            id_module: params.idModul,
+          }))
+        ),
+      });
+    }
+
+    alert("Section dan sub-section berhasil disimpan");
+  };
+
   const renderSections = (items: SectionType[], level = 0): JSX.Element[] =>
     items.map((section) => (
       <div
         key={section.tempId}
         className={`mt-4 mb-6 ml-${
           level * 4
-        } bg-white border rounded-2xl p-4 shadow`}
+        } bg-white border rounded-md p-4 shadow`}
       >
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-2 w-full">
@@ -127,19 +181,53 @@ export default function EditContentModul({ params }: PropsParams) {
             />
           </div>
 
-          <div className="flex gap-2 items-center ml-2">
+          {/* <div className="flex gap-2 items-center ml-2">
             <button onClick={() => addSubSection(section.tempId)}>
               <span
                 className="text-green-600 text-xl"
                 title="Tambah Sub-section"
               >
-                ➕
+                <AiOutlinePlus className="text-green-600 text-xl" />
               </span>
             </button>
             <button onClick={() => removeSection(section.tempId)}>
               <span className="text-red-500 text-xl" title="Hapus Section">
-                🗑
+                <AiOutlineDelete className="text-red-500 text-xl" />
               </span>
+            </button>
+            <button
+              // onClick={() => saveSection(section.tempId)}
+              title="Simpan Section"
+            >
+              <FiSave className="text-blue-600 text-xl" />
+            </button>
+          </div> */}
+
+          <div className="flex gap-2 items-center ml-2">
+            {level === 0 && (
+              <>
+                <button onClick={() => addSubSection(section.tempId)}>
+                  <AiOutlinePlus
+                    className="text-green-600 text-xl"
+                    title="Tambah Sub-section"
+                  />
+                </button>
+                <button
+                  onClick={() => {
+                    saveSection(section.tempId);
+                  }}
+                  title="Simpan Section"
+                >
+                  <FiSave className="text-blue-600 text-xl" />
+                </button>
+              </>
+            )}
+
+            <button onClick={() => removeSection(section.tempId)}>
+              <AiOutlineDelete
+                className="text-red-500 text-xl"
+                title="Hapus Section"
+              />
             </button>
           </div>
         </div>
