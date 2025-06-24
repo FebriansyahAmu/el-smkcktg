@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiSave } from "react-icons/fi";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 type PropsParams = {
   params: {
@@ -71,13 +73,15 @@ export default function EditContentModul({ params }: PropsParams) {
         if (item.tempId === parentTempId) {
           if (level >= 2) return item;
 
+          const currentChildrenCount = item.children?.length ?? 0;
+
           const newChild: SectionType = {
             id: null,
             tempId: generateTempId(),
             parent_id: null,
             title: "",
             content: "",
-            order: 1,
+            order: currentChildrenCount + 1,
             children: [],
           };
 
@@ -116,44 +120,39 @@ export default function EditContentModul({ params }: PropsParams) {
       return;
     }
 
-    const res = await fetch("/api/", {
+    // const subSections = sections.filter(
+    //   (s) => s.parent_id === parentSection.id
+    // );
+
+    const subSections = parentSection.children || [];
+
+    const payload = {
+      parent: {
+        id_section: parentSection.id ?? undefined,
+        id_modules: Number(params.idModul),
+        title: parentSection.title.trim(),
+        content: parentSection.content.trim(),
+        order: parentSection.order ?? 1,
+      },
+      children: subSections.map((sub, index) => ({
+        id_section: sub.id ?? undefined,
+        title: sub.title.trim(),
+        content: sub.content.trim(),
+        order: index + 1,
+      })),
+    };
+
+    const res = await fetch(`/api/moduls/${params.idModul}/edit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        title: parentSection.title.trim(),
-        content: parentSection.content.trim(),
-        parent_id: null,
-        id_module: params.idModul,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    if (!res.ok) {
-      console.error("Gagal menyimpan parent section");
-      return;
-    }
-
-    const savedParent = await res.json();
-    const parentIdFromDB = savedParent.id;
-
-    const children = parentSection.children || [];
-
-    if (children.length > 0) {
-      await fetch("/api/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(
-          children.map((child) => ({
-            title: child.title.trim(),
-            content: child.content.trim(),
-            parent_id: parentIdFromDB,
-            id_module: params.idModul,
-          }))
-        ),
-      });
+    const result = await res.json();
+    if (res.ok) {
+      console.log("Berhasil disimpan,", result.id);
     }
 
     alert("Section dan sub-section berhasil disimpan");

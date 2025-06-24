@@ -19,26 +19,38 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const { parent, children } = body;
 
-    try {
-      await validateModulContent(body);
-    } catch (ValidationError: any) {
-      return NextResponse.json(
-        {
-          status: "error",
-          message: "Validasi gagal",
-          errors: ValidationError.errors,
-        },
-        { status: 400 }
-      );
+    // try {
+    //   await validateModulContent(body);
+    // } catch (ValidationError: any) {
+    //   return NextResponse.json(
+    //     {
+    //       status: "error",
+    //       message: "Validasi gagal",
+    //       errors: ValidationError.errors,
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
+
+    // const data = await modulDal.editModulesContents(body);
+    const parentResult = await modulDal.editModulesContents(parent);
+
+    if (children && Array.isArray(children)) {
+      for (const child of children) {
+        await modulDal.editModulesContents({
+          ...child,
+          parent_id: parentResult.id_section,
+          id_modules: parent.id_modules,
+        });
+      }
     }
-
-    await modulDal.editModulesContents(body);
-
     return NextResponse.json(
       {
         status: "success",
         message: "Content berhasil dibuat",
+        id: parentResult.id_section,
       },
       { status: 201 }
     );
