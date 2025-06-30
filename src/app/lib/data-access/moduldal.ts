@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { getModulDTO } from "../dto/modulDTO";
+import { getModulSectionsDTO } from "../dto/modulSectionsDTO";
 
 interface CreateModulInput {
   id_course: number;
@@ -80,6 +81,39 @@ export class ModulsDAL {
           created_at: new Date(),
         },
       });
+    }
+  }
+
+  async getModulSections(id_module?: number): Promise<getModulSectionsDTO[]> {
+    try {
+      const modulSections = await prisma.el_module_sections.findMany({
+        where: id_module ? { id_module } : {},
+        select: {
+          id_section: true,
+          id_module: true,
+          parent_id: true,
+          title: true,
+          order: true,
+          content: true,
+          created_at: true,
+        },
+      });
+
+      return modulSections.map((data) => ({
+        id_section: data.id_section,
+        id_module: data.id_module,
+        parent_id: data.parent_id,
+        title: data.title,
+        order: data.order,
+        created_at: data.created_at,
+      }));
+    } catch (err: any) {
+      console.error("Error fetching modules sections", err);
+      if (process.env.NODE_ENV === "production") {
+        return [];
+      } else {
+        throw err;
+      }
     }
   }
 }
