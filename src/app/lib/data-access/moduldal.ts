@@ -104,6 +104,7 @@ export class ModulsDAL {
         id_module: data.id_module,
         parent_id: data.parent_id,
         title: data.title,
+        content: data.content,
         order: data.order,
         created_at: data.created_at,
       }));

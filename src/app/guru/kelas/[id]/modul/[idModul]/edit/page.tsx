@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
@@ -52,6 +52,64 @@ export default function EditContentModul({ params }: PropsParams) {
         return item;
       });
     setSections(update(sections));
+  };
+
+  useEffect(() => {
+    async function fetchSections() {
+      try {
+        const res = await fetch(`/api/moduls/${params.idModul}/edit`);
+        const result = await res.json();
+
+        if (result.status === "success") {
+          const structured = buildHierarhcy(result.data);
+          setSections(structured);
+        }
+      } catch (err) {
+        console.error("Gagal load data modul:", err);
+      }
+    }
+
+    if (params?.idModul) {
+      fetchSections();
+    }
+  }, [params.idModul]);
+
+  const buildHierarhcy = (flatData: any[]): SectionType[] => {
+    const map = new Map<number, SectionType>();
+
+    const roots: SectionType[] = [];
+
+    flatData.forEach((item) => {
+      map.set(item.id_section, {
+        id: item.id_section,
+        tempId: `${item.id_section}`,
+        parent_id: item.parent_id,
+        title: item.title,
+        content: item.content || "",
+        order: item.order,
+        children: [],
+      });
+    });
+
+    //susun parent-child berdasarkan parent id
+    map.forEach((section) => {
+      if (section.parent_id && map.has(section.parent_id)) {
+        map.get(section.parent_id)?.children?.push(section);
+      } else {
+        roots.push(section);
+      }
+    });
+
+    const sortSections = (sections: SectionType[]): SectionType[] => {
+      return sections
+        .sort((a, b) => a.order - b.order)
+        .map((s) => ({
+          ...s,
+          children: sortSections(s.children || []),
+        }));
+    };
+
+    return sortSections(roots);
   };
 
   const addSection = () => {
