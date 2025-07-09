@@ -96,8 +96,26 @@ export default function ModulDetail({ params }: PropsParams) {
       >
         <NavDashboard toggleSidebar={toggleSidebar} />
         //main contents goes here
-        <main className="mt-14 p-4 md:ml-14 md:p-7 lg:ml-0 lg:p-7">
-          <div className="w-64 p-4 border-1 bg-white">
+        <main className="mt-14 p-4 md:ml-14 md:p-7 lg:ml-0 lg:p-7 flex">
+          <div className="p-4 w-full">
+            <div className="flex">
+              <div className="flex-1 pr-4">
+                {sections
+                  .flatMap((section) => [section, ...(section.children ?? [])])
+                  .filter((s) => s.id_section === activeSectionId)
+                  .map((s) => (
+                    <div key={s.id_section}>
+                      <h2 className="text-2xl font-bold mb-4">{s.title}</h2>
+                      <div
+                        className="prose"
+                        dangerouslySetInnerHTML={{ __html: s.content }}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+          <div className="w-80 p-4 border-">
             <h3 className="text-lg font-semibold mb-2">Daftar Modul</h3>
             <ul>
               {sections.map((section) => (
