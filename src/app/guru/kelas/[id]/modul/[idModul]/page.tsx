@@ -23,15 +23,23 @@ type SectionType = {
 export default function ModulDetail({ params }: PropsParams) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sections, setSections] = useState<SectionType[]>([]);
+  const [activeSectionId, setActiveSectionId] = useState<number | null>(null);
+  const [expandedSectionIds, setExpandedSectionsIds] = useState<number[]>([]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const toggleSectionExpand = (id: number) => {
+    setExpandedSectionsIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
   useEffect(() => {
     async function fetchSections() {
       try {
-        const res = await fetch(`/api/moduls/${params.idModul}/edit`);
+        const res = await fetch(`/api/moduls/${params.idModul}/preview`);
         const result = await res.json();
 
         if (result.status === "success") {
@@ -49,6 +57,11 @@ export default function ModulDetail({ params }: PropsParams) {
   const buildHierarchy = (flatData: SectionType[]): SectionType[] => {
     const map = new Map<number, SectionType>();
     const roots: SectionType[] = [];
+
+    flatData.forEach((item) => {
+      item.children = [];
+      map.set(item.id_section, item);
+    });
 
     flatData.forEach((item) => {
       const node = map.get(item.id_section)!;
@@ -84,7 +97,52 @@ export default function ModulDetail({ params }: PropsParams) {
         <NavDashboard toggleSidebar={toggleSidebar} />
         //main contents goes here
         <main className="mt-14 p-4 md:ml-14 md:p-7 lg:ml-0 lg:p-7">
-          <p>testi</p>
+          <div className="w-64 p-4 border-1 bg-white">
+            <h3 className="text-lg font-semibold mb-2">Daftar Modul</h3>
+            <ul>
+              {sections.map((section) => (
+                <li key={section.id_section} className="mb-2">
+                  <div className="flex items-center gap-2">
+                    {section.children && section.children.length > 0 && (
+                      <button
+                        onClick={() => toggleSectionExpand(section.id_section)}
+                        className="text-sm text-gray-500 ml-2"
+                      >
+                        {expandedSectionIds.includes(section.id_section)
+                          ? "▲"
+                          : "▼"}
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => setActiveSectionId(section.id_section)}
+                      className={`text-left w-full p-2 rounded hover:bg-gray-100 ${
+                        activeSectionId === section.id_section
+                          ? "bg-blue-100 font-semibold"
+                          : ""
+                      }`}
+                    >
+                      {section.title}
+                    </button>
+                  </div>
+                  {expandedSectionIds.includes(section.id_section) &&
+                    section.children?.map((child) => (
+                      <button
+                        key={child.id_section}
+                        onClick={() => setActiveSectionId(child.id_section)}
+                        className={`ml-4 mt-1 block text-left w-full p-2 rounded hover:bg-gray-100 ${
+                          activeSectionId === child.id_section
+                            ? "bg-blue-100 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        <div className="pl-10">{child.title}</div>
+                      </button>
+                    ))}
+                </li>
+              ))}
+            </ul>
+          </div>
         </main>
       </div>
     </div>
