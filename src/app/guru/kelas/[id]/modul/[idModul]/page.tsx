@@ -18,7 +18,7 @@ export default async function ModulDetail({ params }: PropsParams) {
     {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${session}`,
+        Cookie: `session=${session}`,
       },
     }
   );

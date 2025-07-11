@@ -9,18 +9,18 @@ export async function GET(
   { params }: { params: { id: number } }
 ) {
   try {
-    // const session = await getSession(request);
-    // if (!session || session.role !== "Guru") {
-    //   return NextResponse.json(
-    //     {
-    //       status: "error",
-    //       message: "unauthorization",
-    //     },
-    //     {
-    //       status: 401,
-    //     }
-    //   );
-    // }
+    const session = await getSession(request);
+    if (!session || session.role !== "Guru") {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "unauthorization",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
     const id_modules = Number(params.id);
     const modulesSections = await modulDal.getModulSections(id_modules);
