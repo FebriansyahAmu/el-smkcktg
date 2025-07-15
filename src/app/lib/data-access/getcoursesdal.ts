@@ -42,4 +42,36 @@ export class CourseDAL {
 
     return course;
   }
+
+  async getCourseByInstructors(idcourse: number, id_instructor?: number) {
+    if (!idcourse) {
+      throw new Error("Invalid course ID");
+    }
+
+    const course = await prisma.el_courses.findUnique({
+      where: {
+        id_course: idcourse,
+        id_instructors: id_instructor,
+      },
+    });
+
+    if (!course) {
+      throw new Error("course not found or not accessible");
+    }
+
+    return course;
+  }
+
+  async updateEnrollmentsToken(course_id: number, token: string) {
+    if (!course_id || !token) {
+      throw new Error("Course ID or token is required");
+    }
+
+    const updateCoursesToken = await prisma.el_courses.update({
+      where: { id_course: course_id },
+      data: { enrollments_token: token },
+    });
+
+    return updateCoursesToken;
+  }
 }

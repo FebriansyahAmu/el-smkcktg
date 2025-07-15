@@ -3,6 +3,7 @@ import { useState } from "react";
 import NavDashboard from "@/app/components/NavDashboard";
 import Sidebar from "@/app/components/Sidebar";
 import Modul from "@/app/components/courseDetailComponents/Modul";
+import Murid from "@/app/components/courseDetailComponents/Murid";
 import { TabItem, Tabs } from "flowbite-react";
 import { useParams } from "next/navigation";
 
@@ -37,7 +38,9 @@ export default function CourseDetail({ params }: CourseDetailPageProps) {
               <Modul id_course={id_course} />
             </TabItem>
             <TabItem title="Tugas">Tugas</TabItem>
-            <TabItem title="Murid">Tugas</TabItem>
+            <TabItem title="Murid">
+              <Murid id_course={id_course} />
+            </TabItem>
             <TabItem title="Daftar Hadir">Tugas</TabItem>
           </Tabs>
         </main>

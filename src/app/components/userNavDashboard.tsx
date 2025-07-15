@@ -10,6 +10,15 @@ function UserNavDashboard({ toggleSidebar }: NavDashboardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    window.location.href = "/login";
+  };
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -122,9 +131,9 @@ function UserNavDashboard({ toggleSidebar }: NavDashboardProps) {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        onClick={handleLogout}
                         className="block rounded px-4 py-2 text-sm text-white hover:bg-gray-100 hover:text-gray-700"
-                        role="menuitem"
+                        role="button"
                       >
                         Log out
                       </a>

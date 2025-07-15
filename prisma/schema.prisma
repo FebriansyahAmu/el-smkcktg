@@ -72,19 +72,20 @@ model el_comments {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model el_courses {
-  id_course      Int              @id @default(autoincrement())
-  id_instructors Int
-  Title          String           @db.VarChar(100)
-  Descriotion    String           @db.Text
-  created_at     DateTime?        @default(now()) @db.DateTime(0)
-  updated_at     DateTime?        @default(now()) @db.Timestamp(0)
-  certificates   certificates[]
-  el_assigments  el_assigments[]
-  el_instructors el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onDelete: NoAction, onUpdate: NoAction, map: "el_courses_ibfk_1")
-  el_discussion  el_discussion[]
-  el_enrollments el_enrollments[]
-  el_lessons     el_lessons[]
-  el_modules     el_modules[]
+  id_course         Int              @id @default(autoincrement())
+  id_instructors    Int
+  Title             String           @db.VarChar(100)
+  Descriotion       String           @db.Text
+  created_at        DateTime?        @default(now()) @db.DateTime(0)
+  updated_at        DateTime?        @default(now()) @db.Timestamp(0)
+  enrollments_token String           @db.VarChar(255)
+  certificates      certificates[]
+  el_assigments     el_assigments[]
+  el_instructors    el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onDelete: NoAction, onUpdate: NoAction, map: "el_courses_ibfk_1")
+  el_discussion     el_discussion[]
+  el_enrollments    el_enrollments[]
+  el_lessons        el_lessons[]
+  el_modules        el_modules[]
 
   @@index([id_instructors], map: "id_instructors")
 }
