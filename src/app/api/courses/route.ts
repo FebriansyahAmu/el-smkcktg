@@ -4,30 +4,21 @@ import { getSession } from "@/app/lib/session";
 
 const courseDal = new CourseDAL();
 
-interface instructor {
-  id_instructors: number;
-}
-
 export async function GET(request: NextRequest) {
   try {
-
-//TODO: refactor this functions
+    //TODO: refactor this functions
     const session = await getSession(request);
-    if (!session || session.role !== "Guru") {
+    if (!session || session.role !== "Murid") {
       return NextResponse.json(
         {
           status: "error",
-          message: "Anda tidak memiliki otorisasi",
+          message: "unauthenticated",
         },
         { status: 401 }
       );
     }
 
-    const id_instructor = session?.id_instructors
-      ? Number(session.id_instructors)
-      : undefined;
-
-    const courses = await courseDal.getAllCourses(id_instructor);
+    const courses = await courseDal.getAllCourses();
     return NextResponse.json({ data: courses });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -55,7 +55,7 @@ function UserSidebar({ isOpen, toggleSidebar }: SidebarProps) {
             </li>
             <li>
               <a
-                href="#"
+                href="/murid/kelas"
                 className="flex items-center text-white p-2 hover:text-slate-700 rounded-lg hover:bg-gray-100 group"
               >
                 <FaBook
