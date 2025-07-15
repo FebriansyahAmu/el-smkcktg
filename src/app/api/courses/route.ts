@@ -10,6 +10,8 @@ interface instructor {
 
 export async function GET(request: NextRequest) {
   try {
+
+//TODO: refactor this functions
     const session = await getSession(request);
     if (!session || session.role !== "Guru") {
       return NextResponse.json(
