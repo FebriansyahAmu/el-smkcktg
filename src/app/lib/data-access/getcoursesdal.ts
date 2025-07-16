@@ -30,7 +30,43 @@ export class CourseDAL {
     }
   }
 
-  async getCourseById(id_course: number) {
+  async getCourseByID(id_courses: number): Promise<getCoursesDTO[]> {
+    try {
+      const courses = await prisma.el_courses.findUnique({
+        where: {
+          id_course: id_courses,
+        },
+        select: {
+          id_course: true,
+          id_instructors: true,
+          Title: true,
+          Descriotion: true,
+          created_at: true,
+        },
+      });
+
+      if (!courses) return [];
+
+      return [
+        {
+          id_course: courses.id_course,
+          id_instructors: courses.id_instructors,
+          Title: courses.Title,
+          Description: courses.Descriotion,
+          created_at: courses.created_at,
+        },
+      ];
+    } catch (err: any) {
+      console.error("Error fetching courses", err);
+      if (process.env.NODE_ENV === "production") {
+        return [];
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  async getValidCourses(id_course: number) {
     if (!id_course) {
       throw new Error("invalid course ID");
     }

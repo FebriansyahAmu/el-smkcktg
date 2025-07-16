@@ -12,7 +12,7 @@ export default function GetAllCourses({ courses }: props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 9;
 
   const indexOfLastCourses = currentPage * itemsPerPage;
   const indexOfFirstCourses = indexOfLastCourses - itemsPerPage;
