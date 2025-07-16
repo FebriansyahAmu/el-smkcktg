@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const courses = await courseDal.getAllCourses();
     return NextResponse.json({ data: courses });
-  } catch (error: any) {
+  } catch (error: any) {  
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

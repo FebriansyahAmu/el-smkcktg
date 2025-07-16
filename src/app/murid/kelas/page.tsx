@@ -13,7 +13,6 @@ export default async function Courses() {
     },
   });
   const course = await res.json();
-  console.log("response api", course);
   const courses: CoursesType[] = course.data;
 
   return <GetAllCourses courses={courses} />;
