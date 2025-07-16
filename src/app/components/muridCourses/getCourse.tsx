@@ -4,13 +4,21 @@ import UserNavDashboard from "../userNavDashboard";
 import UserSidebar from "../userSidebar";
 import { CoursesType } from "@/app/lib/types/courses";
 import { FaStar, FaUserGraduate, FaClock } from "react-icons/fa";
+import {
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Button,
+  Modal,
+} from "flowbite-react";
 
 type props = {
   courses: CoursesType[];
 };
 
 export default function GetCoursByID({ courses }: props) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -34,9 +42,6 @@ export default function GetCoursByID({ courses }: props) {
             <div className="flex flex-col md:flex-row bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="w-full md:w-1/3">
                 <img src="" className="object-cover h-full w-full" />
-                <div className="bg-teal-600 text-white text-sm font-semibold text-center py-1">
-                  Gratis
-                </div>
               </div>
 
               <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
@@ -81,7 +86,10 @@ export default function GetCoursByID({ courses }: props) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                  <button className="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700 w-full sm:w-auto">
+                  <button
+                    onClick={() => setOpenModal(true)}
+                    className="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700 w-full sm:w-auto"
+                  >
                     Enroll Kelas
                   </button>
                   <button className="border border-gray-300 py-2 px-4 rounded hover:bg-gray-100 w-full sm:w-auto">
@@ -91,6 +99,68 @@ export default function GetCoursByID({ courses }: props) {
                     Lihat Silabus
                   </button>
                 </div>
+
+                {/* modal */}
+                <Modal
+                  dismissible
+                  show={openModal}
+                  onClose={() => setOpenModal(false)}
+                >
+                  <ModalHeader>Gabung ke kelas</ModalHeader>
+                  <ModalBody>
+                    <div className="flex items-center space-x-4 mb-4">
+                      <img
+                        src="/path-to-avatar.jpg" // ganti dengan path/avatar dari user
+                        alt="User Avatar"
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="text-lg font-semibold text-gray-800">
+                          Nama Pengguna
+                        </p>
+                        <p className="text-sm text-gray-500">ID: 123456</p>{" "}
+                        {/* Opsional */}
+                      </div>
+                    </div>
+
+                    <form className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="enrollmentToken"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                          Masukkan Kode Enroll
+                        </label>
+                        <p className="text-sm text-gray-700 mt-3">
+                          Mintalah kode enrollment kepada pengajar, lalu masukan
+                          kode disini
+                        </p>
+                        <input
+                          type="text"
+                          id="enrollmentToken"
+                          className="mx-auto mt-3 border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Contoh: SC-M00721B"
+                        />
+                      </div>
+
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          color="red"
+                          onClick={() => setOpenModal(false)}
+                          className="rounded-sm"
+                        >
+                          Batal
+                        </Button>
+                        <button
+                          type="submit"
+                          className="bg-blue-600 text-white px-4 py-2 rounded-sm hover:bg-blue-700"
+                        >
+                          Gabung kelas
+                        </button>
+                      </div>
+                    </form>
+                  </ModalBody>
+                </Modal>
               </div>
             </div>
           </main>

@@ -24,7 +24,5 @@ export default async function CoursesByID({ params }: PropsParams) {
 
   const coursebyID = await res.json();
   const course = coursebyID.data;
-  console.log("response api", course);
-
   return <GetCoursByID courses={course} />;
 }
