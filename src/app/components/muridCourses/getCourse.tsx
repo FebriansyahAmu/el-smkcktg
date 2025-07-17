@@ -20,11 +20,40 @@ export default function GetCoursByID({ courses }: props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openModal, setOpenModal] = useState(false);
 
+  const [token, setToken] = useState("");
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   const course = courses[0];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/enrollments/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_course: course.id_course,
+          enrollment_token: token,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("Terjadi kesalahan");
+      } else {
+        alert("berhasil gabung kelas");
+      }
+    } catch (err) {
+      console.error("Terjadi kesalahan saat mengirim data");
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -123,7 +152,7 @@ export default function GetCoursByID({ courses }: props) {
                       </div>
                     </div>
 
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                       <div>
                         <label
                           htmlFor="enrollmentToken"
@@ -138,8 +167,11 @@ export default function GetCoursByID({ courses }: props) {
                         <input
                           type="text"
                           id="enrollmentToken"
+                          value={token}
+                          onChange={(e) => setToken(e.target.value)}
                           className="mx-auto mt-3 border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Contoh: SC-M00721B"
+                          required
                         />
                       </div>
 

@@ -139,4 +139,23 @@ export class CourseDAL {
 
     return updateCoursesToken;
   }
+
+  async checkEnrollmentsToken(course_id: number, token: string) {
+    try {
+      if (!course_id || !token) {
+        throw new Error("Course Id or token is invalid");
+      }
+
+      const checkToken = await prisma.el_courses.findFirst({
+        where: {
+          id_course: course_id,
+          enrollments_token: token,
+        },
+      });
+
+      return checkToken;
+    } catch (err) {
+      throw new Error("Failed to check tokens");
+    }
+  }
 }
