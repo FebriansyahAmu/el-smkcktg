@@ -7,6 +7,9 @@ import {
 } from "@/app/lib/data-access/userdal";
 import { createSession } from "@/app/lib/session";
 import { ValidationError } from "yup";
+import { StudentsDAL } from "@/app/lib/data-access/studentsdal";
+
+const students = new StudentsDAL();
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
@@ -47,6 +50,7 @@ export async function POST(request: Request) {
   }
 
   const instructorsId = await getInstructorsId(user.id);
+  const studentsId = await students.getStundentsID(user.id);
 
   const sessionPayload: SessionPayload = {
     userId: user.id,
@@ -55,6 +59,10 @@ export async function POST(request: Request) {
     ...(user.role === "Guru" && {
       id_instructor: instructorsId?.id_insctructors,
     }),
+    ...(user.role === "Murid" &&
+      studentsId?.id_student && {
+        id_student: studentsId.id_student,
+      }),
   };
 
   await createSession(sessionPayload);

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { createUser, CreatedUserData } from "../../models/userModel";
+import { StudentsDAL } from "@/app/lib/data-access/studentsdal";
+
+const students = new StudentsDAL();
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +21,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    await students.inputStudentData(newUser.id);
 
     return NextResponse.json(
       { message: "Registrasi akun berhasil" },
