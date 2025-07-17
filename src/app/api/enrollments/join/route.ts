@@ -14,7 +14,9 @@ interface inputData {
 
 export async function POST(request: NextRequest) {
   try {
-    const { courseID, enrollToken } = await request.json();
+    const { id_course, enrollment_token } = await request.json();
+    console.log("Enrol token", id_course);
+    console.log("idCourse", enrollment_token);
 
     const session = await getSession(request);
     if (!session || session.role !== "Murid") {
@@ -39,8 +41,8 @@ export async function POST(request: NextRequest) {
     }
 
     const checkToken = await courseDal.checkEnrollmentsToken(
-      Number(courseID),
-      enrollToken
+      Number(id_course),
+      enrollment_token
     );
 
     if (!checkToken) {
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     const isUserAlreadyEnroll = await enrollDal.checkEnrollmentsByUser(
-      Number(courseID),
+      Number(id_course),
       studentId
     );
 
@@ -69,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data: inputData = {
-      id_course: courseID,
+      id_course: id_course,
       id_student: studentId,
       completion_status: "Progress",
     };

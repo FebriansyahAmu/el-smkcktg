@@ -141,11 +141,10 @@ export class CourseDAL {
   }
 
   async checkEnrollmentsToken(course_id: number, token: string) {
+    if (!course_id || !token) {
+      throw new Error("Course Id or token is invalid");
+    }
     try {
-      if (!course_id || !token) {
-        throw new Error("Course Id or token is invalid");
-      }
-
       const checkToken = await prisma.el_courses.findFirst({
         where: {
           id_course: course_id,
@@ -153,9 +152,13 @@ export class CourseDAL {
         },
       });
 
+      if (!checkToken) {
+        throw new Error("Invalid Enrollments Token");
+      }
+
       return checkToken;
-    } catch (err) {
-      throw new Error("Failed to check tokens");
+    } catch (err: any) {
+      throw new Error(err.message || "Failed to check tokens");
     }
   }
 }
