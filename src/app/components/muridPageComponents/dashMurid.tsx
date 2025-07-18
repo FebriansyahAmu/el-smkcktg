@@ -2,8 +2,13 @@
 import { useState } from "react";
 import UserNavDashboard from "../userNavDashboard";
 import UserSidebar from "../userSidebar";
+import { CoursesType } from "@/app/lib/types/courses";
 
-export default function DashMurid() {
+type props = {
+  courses: CoursesType[];
+};
+
+export default function DashMurid({ courses }: props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -31,23 +36,25 @@ export default function DashMurid() {
               </p>
             </div>
             <div className="grid grid-cols-1 gap-4 mt-10 md:grid-cols-2">
-              <div className="bg-white shadow rounded p-4">
-                <h2 className="text-xl font-bold mb-3">Daftar Kelas</h2>
-                <div className="grid grid-cols-1 p-4 bg-gray-100 rounded-sm">
-                  <h6 className="font-semibold mb-2">Sedang dipelajari</h6>
-                  <div className="flex justify-between items-start gap-4">
-                    <p className="text-sm font-light flex-1">
-                      Pemograman Website
-                    </p>
-                    <a
-                      href="#"
-                      className="text-blue-500 text-sm shrink-0 whitespace-nowrap hover:underline"
-                    >
-                      Lanjut belajar
-                    </a>
+              {courses.map((course) => (
+                <div className="bg-white shadow rounded p-4">
+                  <h2 className="text-xl font-bold mb-3">Daftar Kelas</h2>
+                  <div className="grid grid-cols-1 p-4 bg-gray-100 rounded-sm">
+                    <h6 className="font-semibold mb-2">Sedang dipelajari</h6>
+                    <div className="flex justify-between items-start gap-4">
+                      <p className="text-sm font-light flex-1">
+                        {course.Title}
+                      </p>
+                      <a
+                        href="#"
+                        className="text-blue-500 text-sm shrink-0 whitespace-nowrap hover:underline"
+                      >
+                        Lanjut belajar
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
 
               {/* Grid kedua: Daftar Tugas */}
               <div className="bg-white shadow rounded p-4">

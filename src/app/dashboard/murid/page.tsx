@@ -3,7 +3,18 @@ import { cookies } from "next/headers";
 
 export default async function DashboardMurid() {
   const cookieStore = cookies();
-  const sessio = cookieStore.get("session")?.value;
+  const session = cookieStore.get("session")?.value;
 
-  return <DashMurid />;
+  const res = await fetch(`${process.env.BASE_URL}/api/courses/enrolled`, {
+    method: "GET",
+    cache: "no-cache",
+    headers: {
+      Cookie: `session=${session}`,
+    },
+  });
+
+  const getEnrollCourses = await res.json();
+  const enrolled = getEnrollCourses.data;
+
+  return <DashMurid courses={enrolled} />;
 }
