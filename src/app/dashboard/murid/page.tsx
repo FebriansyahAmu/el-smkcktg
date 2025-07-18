@@ -1,22 +1,9 @@
-"use client";
-import { useState } from "react";
-import UserNavDashboard from "../../components/userNavDashboard";
-import UserSidebar from "@/app/components/userSidebar";
+import DashMurid from "@/app/components/muridPageComponents/dashMurid";
+import { cookies } from "next/headers";
 
-export default function Dashboard() {
-  // Jangan lupa untuk kapitalisasi nama komponen menjadi `Dashboard`
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+export default async function DashboardMurid() {
+  const cookieStore = cookies();
+  const sessio = cookieStore.get("session")?.value;
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  return (
-    <>
-      <UserNavDashboard toggleSidebar={toggleSidebar} />
-      <UserSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      {/* Content goes here */}
-      <main></main>
-    </>
-  );
+  return <DashMurid />;
 }

@@ -1,5 +1,8 @@
 import { prisma } from "@/app/lib/prisma";
 import { getCoursesDTO } from "../dto/courseDTO";
+import { EnrollmentsDAL } from "./enrollmentsdal";
+
+const enrollemnts = new EnrollmentsDAL();
 
 export class CourseDAL {
   async getAllCourses(): Promise<getCoursesDTO[]> {
@@ -160,5 +163,13 @@ export class CourseDAL {
     } catch (err: any) {
       throw new Error(err.message || "Failed to check tokens");
     }
+  }
+
+  async getCourseEnrolled(student_Id: number) {
+    if (!student_Id) {
+      throw new Error("Invalid Student ID");
+    }
+
+    
   }
 }

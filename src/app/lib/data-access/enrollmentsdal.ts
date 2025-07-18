@@ -36,4 +36,39 @@ export class EnrollmentsDAL {
       },
     });
   }
+
+  async checkAllEnrolledClass(studentID: number): Promise<getEnrollmentsDTO[]> {
+    if (!studentID) {
+      throw new Error("Invalid StudentID");
+    }
+
+    try {
+      const enrollData = await prisma.el_enrollments.findMany({
+        select: {
+          id_enrollments: true,
+          id_course: true,
+          id_student: true,
+          Enrollment_date: true,
+          completion_status: true,
+          completion_date: true,
+        },
+      });
+
+      return enrollData.map((data) => ({
+        id_enrollments: data.id_enrollments,
+        id_course: data.id_course,
+        id_student: data.id_student,
+        Enrollment_date: data.Enrollment_date,
+        completion_status: data.completion_status,
+        completion_date: data.completion_date,
+      }));
+    } catch (err: unknown) {
+      console.error("Error fetching enroll data:", err);
+      if (process.env.NODE_ENV === "production") {
+        return [];
+      } else {
+        throw err;
+      }
+    }
+  }
 }
