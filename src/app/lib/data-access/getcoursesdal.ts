@@ -165,11 +165,50 @@ export class CourseDAL {
     }
   }
 
-  async getCourseEnrolled(student_Id: number) {
+  async getCourseEnrolled(student_Id: number): Promise<getCoursesDTO[]> {
     if (!student_Id) {
       throw new Error("Invalid Student ID");
     }
 
-    
+    const checkEnrollments = await enrollemnts.checkAllEnrolledClass(
+      student_Id
+    );
+
+    if (!checkEnrollments) {
+      throw new Error("Data tidak ditemukan"); 
+    }
+    try {
+      const courses = await prisma.el_enrollments.findMany({
+        where: {
+          id_student: student_Id,
+        },
+        select: {
+          el_courses: {
+            select: {
+              id_course: true,
+              id_instructors: true,
+              Title: true,
+              Descriotion: true,
+              created_at: true,
+            },
+          },
+        },
+      });
+
+      return courses.map((data) => ({
+        id_course: data.el_courses.id_course,
+        id_instructors: data.el_courses.id_instructors,
+        Title: data.el_courses.Title,
+        Description: data.el_courses.Descriotion,
+        created_at: data.el_courses.created_at,
+      }));
+    } catch (err: unknown) {
+      console.error("Error fetching data", err);
+      if (process.env.NODE_ENV === "production") {
+        return [];
+      } else {
+        throw err;
+      }
+    }
   }
 }
