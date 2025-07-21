@@ -49,7 +49,7 @@ export default function DashMurid({ courses }: props) {
                         href="#"
                         className="text-blue-500 text-sm shrink-0 whitespace-nowrap hover:underline"
                       >
-                        Lanjut belajar
+                        Detail Kelas
                       </a>
                     </div>
                   </div>

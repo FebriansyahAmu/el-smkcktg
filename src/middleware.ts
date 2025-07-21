@@ -30,5 +30,5 @@ export async function middleware(req: NextRequest) {
 
 // Konfigurasi matcher middleware
 export const config = {
-  matcher: ["/dashboard/:role*"], // Cocokkan semua rute yang dimulai dengan /dashboard/guru atau /dashboard/murid
+  matcher: ["/dashboard/:role*", "/murid/:path*", "/guru/:path*"], // Cocokkan semua rute yang dimulai dengan /dashboard/guru atau /dashboard/murid
 };
