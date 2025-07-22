@@ -7,6 +7,9 @@ import {
   FaComments,
   FaChartLine,
   FaClock,
+  FaCalendarAlt,
+  FaChalkboardTeacher,
+  FaPlayCircle,
 } from "react-icons/fa";
 import MuridPageNavbar from "../../muridPageComponents/muridPageNavbar";
 
@@ -30,7 +33,7 @@ export default function MuridCoursesDash() {
             className="px-4 py-2 border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-sm font-normal flex items-center transition-colors duration-200"
           >
             <FaClipboardList className="text-md mr-2" />
-            Modul
+            Modul Pembelajaran
           </a>
           <a
             href=""
@@ -121,6 +124,70 @@ export default function MuridCoursesDash() {
               </div>
             </div>
           </div>
+        </section>
+
+        <div className="bg-white rounded-xl shadow-md p-6 w-full mb-8">
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="font-semibold text-gray-800 text-lg">
+              Pemogramman Web
+            </h4>
+          </div>
+          <p className="text-gray-600 text-sm mb-4">
+            Konsep dasar fisika mekanika untuk pemahaman fundamental ilmiah.
+          </p>
+
+          <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+            <span className="flex items-center">
+              <FaPlayCircle className="mr-2" />
+              15 Materi
+            </span>
+            <span className="flex items-center">
+              <FaClock className="mr-2" />
+              10 Jam
+            </span>
+          </div>
+
+          <div className="mt-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="font-medium">Progress</span>
+              <span>65%</span>
+            </div>
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-indigo-600"
+                style={{ width: "65%" }}
+              ></div>
+            </div>
+          </div>
+
+          <button className="mt-4 w-full py-2 bg-white border border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-lg text-sm font-medium transition duration-300">
+            Lanjutkan Belajar
+          </button>
+        </div>
+
+        <section className="bg-white rounded-xl shadow-md  overflow-hidden mb-8">
+          <div className="border border-gray-200 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+              <FaCalendarAlt className="mr-2 text-purple-600" />
+              Agenda Mendatang
+            </h3>
+          </div>
+
+          <ul className="devide-y devide-gray-200">
+            <li className="px-6 py-4 flex items-center">
+              <div className="flex-shrink-0 bg-indigo-100 rounded-lg p-2">
+                <FaChalkboardTeacher className="text-indigo-600" />
+              </div>
+              <div className="ml-4">
+                <h4 className="text-sm font-medium text-gray-800 ">
+                  Sesi Live: Pembahasan Modul
+                </h4>
+                <p className="text-xs text-gray-500 mt-1 flex items-center">
+                  <FaClock className="mr-1" /> Besok, 09:00 - 10:30
+                </p>
+              </div>
+            </li>
+          </ul>
         </section>
       </main>
     </div>
