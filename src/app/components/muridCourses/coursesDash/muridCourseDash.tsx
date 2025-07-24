@@ -12,8 +12,13 @@ import {
   FaPlayCircle,
 } from "react-icons/fa";
 import MuridPageNavbar from "../../muridPageComponents/muridPageNavbar";
+import Link from "next/link";
 
-export default function MuridCoursesDash() {
+type PropsParams = {
+  idCourse: number;
+};
+
+export default function MuridCoursesDash({ idCourse }: PropsParams) {
   return (
     <div className="min-h-screen  flex flex-col bg-gray-100">
       <MuridPageNavbar />
@@ -28,13 +33,13 @@ export default function MuridCoursesDash() {
         </section>
 
         <section className="flex flex-wrap gap-4 mb-8">
-          <a
-            href=""
+          <Link
+            href={`${idCourse}/modul`}
             className="px-4 py-2 border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-sm font-normal flex items-center transition-colors duration-200"
           >
             <FaClipboardList className="text-md mr-2" />
             Modul Pembelajaran
-          </a>
+          </Link>
           <a
             href=""
             className="px-4 py-2 border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-sm font-normal flex items-center transition-colors duration-200"

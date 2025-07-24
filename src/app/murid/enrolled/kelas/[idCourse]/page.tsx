@@ -11,5 +11,5 @@ export default async function EnrolledCourses({ params }: PropsParams) {
   const cookieStore = cookies();
   const session = cookieStore.get("session")?.value;
 
-  return <MuridCoursesDash />;
+  return <MuridCoursesDash idCourse={params.idCourse} />;
 }
