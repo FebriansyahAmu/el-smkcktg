@@ -2,6 +2,8 @@
 import MuridPageNavRead from "./muridPageNavRead";
 import { HiChevronRight } from "react-icons/hi";
 import Link from "next/link";
+import { SectionType } from "@/app/lib/types/section";
+
 
 export default function MuridPageReadModul() {
   return (

@@ -8,7 +8,7 @@ const enrolldal = new EnrollmentsDAL();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { idCourse: number } }
+  { params }: { params: { idCourse: number; idModuls: number } }
 ) {
   try {
     const session = await getSession(request);
@@ -48,7 +48,7 @@ export async function GET(
       );
     }
 
-    const data = await moduldal.getModul(Number(params.idCourse));
+    const data = await moduldal.getModulSections(Number(params.idModuls));
 
     if (!data) {
       return NextResponse.json(
@@ -68,7 +68,7 @@ export async function GET(
       { status: 200 }
     );
   } catch (err: unknown) {
-    console.error("Get modul api error", err);
+    console.error("Get modul sections api error", err);
     return NextResponse.json(
       {
         status: "error",
