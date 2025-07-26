@@ -24,5 +24,5 @@ export default async function MuridModulPage({ params }: PropsParams) {
   const isModul = await res.json();
   const moduls = isModul.data;
 
-  return <MuridPageModul moduls={moduls} />;
+  return <MuridPageModul moduls={moduls} idCourse={params.idCourse} />;
 }

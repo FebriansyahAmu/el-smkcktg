@@ -117,4 +117,42 @@ export class ModulsDAL {
       }
     }
   }
+
+  async getModulByID(
+    id_course?: number,
+    id_modules?: number
+  ): Promise<getModulDTO | null> {
+    try {
+      const modul = await prisma.el_modules.findFirst({
+        where: {
+          ...(id_modules && { id_modules }),
+          ...(id_course && { id_course }),
+        },
+        select: {
+          id_course: true,
+          id_modules: true,
+          title: true,
+          description: true,
+          created_at: true,
+        },
+      });
+
+      return modul
+        ? {
+            id_course: modul.id_course,
+            id_modules: modul.id_modules,
+            title: modul.title,
+            description: modul.description,
+            created_at: modul.created_at,
+          }
+        : null;
+    } catch (err: unknown) {
+      console.error("Error fetching courses", err);
+      if (process.env.NODE_ENV === "production") {
+        return null;
+      } else {
+        throw err;
+      }
+    }
+  }
 }
