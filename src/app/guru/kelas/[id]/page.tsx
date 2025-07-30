@@ -6,6 +6,7 @@ import Modul from "@/app/components/courseDetailComponents/Modul";
 import Murid from "@/app/components/courseDetailComponents/Murid";
 import { TabItem, Tabs } from "flowbite-react";
 import { useParams } from "next/navigation";
+import TugasPages from "@/app/components/guruPageComponents/tugasComponents/tugasComponents";
 
 type CourseDetailPageProps = {
   params: {
@@ -37,7 +38,9 @@ export default function CourseDetail({ params }: CourseDetailPageProps) {
             <TabItem title="Modul">
               <Modul id_course={id_course} />
             </TabItem>
-            <TabItem title="Tugas">Tugas</TabItem>
+            <TabItem title="Tugas">
+              <TugasPages />
+            </TabItem>
             <TabItem title="Murid">
               <Murid id_course={id_course} />
             </TabItem>

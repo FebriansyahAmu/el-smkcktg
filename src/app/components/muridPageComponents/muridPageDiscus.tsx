@@ -39,10 +39,7 @@ export default function MuridPageDiscussion() {
 
         <section className="space-y-6">
           <div className="bg-white rounded-xl shadow-md p-6">
-            <h4 className="font-bold text-gray-800">
-              Pertanyaan tentang Soal Hal 45
-            </h4>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 font-bold">
               Saya tidak mengerti cara menyelesaikan soal nomor 5. Ada yang bisa
               membantu?
             </p>
