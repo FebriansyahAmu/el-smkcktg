@@ -43,8 +43,9 @@ model el_assigments {
   title          String           @db.VarChar(255)
   description    String           @db.Text
   due_date       DateTime         @db.DateTime(0)
-  created_at     DateTime         @default(now()) @db.Timestamp(0)
-  updated_at     DateTime         @db.DateTime(0)
+  file_url       String?          @db.VarChar(255)
+  created_at     DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?        @default(now()) @db.Timestamp(0)
   el_courses     el_courses       @relation(fields: [id_course], references: [id_course], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_1")
   el_instructors el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_2")
   el_submissions el_submissions[]
