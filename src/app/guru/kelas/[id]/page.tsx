@@ -39,7 +39,7 @@ export default function CourseDetail({ params }: CourseDetailPageProps) {
               <Modul id_course={id_course} />
             </TabItem>
             <TabItem title="Tugas">
-              <TugasPages />
+              <TugasPages id_course={id_course} />
             </TabItem>
             <TabItem title="Murid">
               <Murid id_course={id_course} />

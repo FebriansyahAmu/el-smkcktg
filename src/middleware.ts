@@ -5,30 +5,36 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const session = await getSession(req);
 
-  // Jika tidak ada session atau pengguna belum login, redirect ke login
+  // Jika tidak login, redirect ke login
   if (!session) {
-    const loginUrl = new URL("/login", req.url);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Ambil role dari session payload
   const userRole = session.role;
 
-  // Cek akses berdasarkan role dan path
-  if (
-    (pathname.startsWith("/dashboard/guru") && userRole !== "Guru") ||
-    (pathname.startsWith("/dashboard/murid") && userRole !== "Murid")
-  ) {
-    // Jika role tidak cocok dengan path yang diakses, redirect ke halaman akses ditolak atau dashboard utama
-    const accessDeniedUrl = new URL("/403", req.url);
-    return NextResponse.redirect(accessDeniedUrl);
+  // Cek role berdasarkan prefix path
+  const isGuruPage =
+    pathname.startsWith("/dashboard/guru") || pathname.startsWith("/guru");
+  const isMuridPage =
+    pathname.startsWith("/dashboard/murid") || pathname.startsWith("/murid");
+
+  if (isGuruPage && userRole !== "Guru") {
+    return NextResponse.redirect(new URL("/403", req.url));
   }
 
-  // Jika role sesuai dengan path, izinkan akses
+  if (isMuridPage && userRole !== "Murid") {
+    return NextResponse.redirect(new URL("/403", req.url));
+  }
+
   return NextResponse.next();
 }
 
-// Konfigurasi matcher middleware
+// Konfigurasi matcher
 export const config = {
-  matcher: ["/dashboard/:role*", "/murid/:path*", "/guru/:path*"], // Cocokkan semua rute yang dimulai dengan /dashboard/guru atau /dashboard/murid
+  matcher: [
+    "/dashboard/guru/:path*",
+    "/dashboard/murid/:path*",
+    "/guru/:path*",
+    "/murid/:path*",
+  ],
 };

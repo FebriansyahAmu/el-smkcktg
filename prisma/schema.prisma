@@ -37,17 +37,18 @@ model el_answer {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model el_assigments {
-  id_assigment   Int              @id @default(autoincrement())
+  id_assigment   Int                      @id @default(autoincrement())
   id_course      Int
   id_instructors Int
-  title          String           @db.VarChar(255)
-  description    String           @db.Text
-  due_date       DateTime         @db.DateTime(0)
-  file_url       String?          @db.VarChar(255)
-  created_at     DateTime?        @default(now()) @db.Timestamp(0)
-  updated_at     DateTime?        @default(now()) @db.Timestamp(0)
-  el_courses     el_courses       @relation(fields: [id_course], references: [id_course], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_1")
-  el_instructors el_instructors   @relation(fields: [id_instructors], references: [id_insctructors], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_2")
+  title          String                   @db.VarChar(255)
+  description    String                   @db.Text
+  due_date       DateTime                 @db.DateTime(0)
+  tipe_tugas     el_assigments_tipe_tugas
+  file_url       String?                  @db.VarChar(255)
+  created_at     DateTime?                @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?                @default(now()) @db.Timestamp(0)
+  el_courses     el_courses               @relation(fields: [id_course], references: [id_course], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_1")
+  el_instructors el_instructors           @relation(fields: [id_instructors], references: [id_insctructors], onDelete: NoAction, onUpdate: NoAction, map: "el_assigments_ibfk_2")
   el_submissions el_submissions[]
 
   @@index([id_course], map: "id_course")
@@ -306,4 +307,9 @@ enum el_users_role {
   Murid
   Guru
   Admin
+}
+
+enum el_assigments_tipe_tugas {
+  Individu
+  Kelompok
 }

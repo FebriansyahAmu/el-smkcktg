@@ -6,6 +6,7 @@ interface AssigmentsInput {
   title: string;
   description: string;
   due_date: Date;
+  tipe_tugas: "Individu" | "Kelompok";
   file_url: string | null;
 }
 
@@ -17,7 +18,9 @@ export class AssigmentsDAL {
         id_instructors: input.id_instructors,
         title: input.title,
         description: input.description,
+        file_url: input.file_url,
         due_date: input.due_date,
+        tipe_tugas: input.tipe_tugas,
       },
     });
   }

@@ -86,7 +86,7 @@ export class CourseDAL {
       throw new Error("Invalid course ID");
     }
 
-    const course = await prisma.el_courses.findUnique({
+    const course = await prisma.el_courses.findFirst({
       where: {
         id_course: idcourse,
         id_instructors: id_instructor,
@@ -175,7 +175,7 @@ export class CourseDAL {
     );
 
     if (!checkEnrollments) {
-      throw new Error("Data tidak ditemukan"); 
+      throw new Error("Data tidak ditemukan");
     }
     try {
       const courses = await prisma.el_enrollments.findMany({

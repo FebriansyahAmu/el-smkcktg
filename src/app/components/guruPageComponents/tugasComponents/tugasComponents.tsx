@@ -4,7 +4,94 @@ import Link from "next/link";
 import { HiCloudUpload, HiUser } from "react-icons/hi";
 import { FiFile } from "react-icons/fi";
 
-export default function TugasPages() {
+type IDCProps = {
+  id_course: number;
+};
+
+export default function TugasPages({ id_course }: IDCProps) {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    tipe_tugas: null as "Individu" | "Kelompok" | null,
+    date: "",
+    time: "",
+  });
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTypeChange = (val: "Individu" | "Kelompok") => {
+    setFormData((prev) => ({ ...prev, tipe_tugas: val }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const uploadFile = async (): Promise<string | null> => {
+    if (!file) return null;
+
+    const data = new FormData();
+    data.append("file", file);
+
+    try {
+      const res = await fetch("/api/uploads/assigments", {
+        method: "POST",
+        body: data,
+      });
+
+      if (!res.ok) {
+        throw new Error("upload gagal");
+      }
+
+      const json = await res.json();
+      return json.fileUrl as string;
+    } catch (error) {
+      alert("gagal upload file");
+      return null;
+    }
+  };
+
+  const handleSubmit = async () => {
+    let fileUrl = null;
+
+    if (file) {
+      fileUrl = await uploadFile();
+      if (!fileUrl) {
+        return;
+      }
+
+    }
+
+    const payload = {
+      id_course,
+      ...formData,
+      file_url: fileUrl
+    };
+
+    const res = await fetch("/api/instructors/courses/assigments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res) {
+      alert("Terjadi kesalahan");
+    } else {
+      alert("BErhasil membuat tugas");
+    }
+  };
+
   return (
     <div className="flex-1 mt-4 mb-8 max-w-7xl">
       <section className="w-full flex justify-between items-center mb-8">
@@ -34,6 +121,9 @@ export default function TugasPages() {
                 </label>
                 <input
                   type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
                   id="judul"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-all"
                   placeholder="Misal: Tugas Matematika Aljabar"
@@ -45,6 +135,9 @@ export default function TugasPages() {
                   Deskripsi
                 </label>
                 <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
                   className="w-full border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none"
                   placeholder="Tulis deskripsi tugas..."
                 ></textarea>
@@ -61,10 +154,13 @@ export default function TugasPages() {
                   <p className="text-sm text-gray-600 mb-2">
                     Drag and drop file disini atau klik untuk mengunggah
                   </p>
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary rounded-lg hover:bg-gray-300 transition-colors">
-                    <FiFile className="text-base" />
-                    <span className="text-sm font-medium">Pilih File</span>
-                  </button>
+                  <input
+                    type="file"
+                    name="testing"
+                    onChange={handleFileChange}
+                    role="button"
+                    accept=".pdf,.docx,.pptx,.xlsx"
+                  />
                   <p className="text-xs text-gray-500 mt-2">
                     Format dokument, presentasi, spreadsheet (PDF, DOCX, PPTX,
                     XLSX)
@@ -79,8 +175,10 @@ export default function TugasPages() {
                   <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-blue-600">
                     <input
                       type="radio"
+                      name="tipe_tugas"
+                      checked={formData.tipe_tugas === "Individu"}
+                      onChange={() => handleTypeChange("Individu")}
                       className="h-4 w-4 text-gray-700"
-                      checked
                     />
                     <div className="ml-3">
                       <p className="text-sm font-medium text-gray-700">
@@ -92,7 +190,13 @@ export default function TugasPages() {
                     </div>
                   </label>
                   <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-blue-600">
-                    <input type="radio" className="h-4 w-4 text-gray-700" />
+                    <input
+                      type="radio"
+                      name="tipe_tugas"
+                      checked={formData.tipe_tugas === "Kelompok"}
+                      onChange={() => handleTypeChange("Kelompok")}
+                      className="h-4 w-4 text-gray-700"
+                    />
                     <div className="ml-3">
                       <p className="text-sm font-medium text-gray-700">
                         Tugas kelompok
@@ -112,6 +216,9 @@ export default function TugasPages() {
                   </label>
                   <input
                     type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-700 transition-all"
                   />
                 </div>
@@ -121,6 +228,9 @@ export default function TugasPages() {
                   </label>
                   <input
                     type="time"
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-1 focus:ring-blue-700 transition-all"
                   />
                 </div>
@@ -135,6 +245,7 @@ export default function TugasPages() {
                 </button>
                 <button
                   type="button"
+                  onClick={handleSubmit}
                   className="px-6 py-2 bg-blue-600 text-white rounded-sm hover:bg-blue-900 transition-colors"
                 >
                   Simpan Tugas

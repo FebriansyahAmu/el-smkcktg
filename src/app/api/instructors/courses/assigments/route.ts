@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/lib/session";
 import { validateAssigmentInput } from "@/app/lib/validation/assigmentsValidation";
 import { AssigmentsDAL } from "@/app/lib/data-access/assigmentsdal";
+import { CourseDAL } from "@/app/lib/data-access/getcoursesdal";
 import { ValidationError } from "yup";
 
 const assigmentsdal = new AssigmentsDAL();
+const coursedal = new CourseDAL();
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,10 +22,47 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { date, time, ...rest } = body;
+
+    // TODO:validasi kursus dan validasi id instructors disini
+
+    const insturctorsID = Number(session?.id_instructor ?? NaN);
+    if (isNaN(insturctorsID)) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "invalid session data",
+        },
+        { status: 401 }
+      );
+    }
+
+    const checkValidityCourse = await coursedal.getCourseByInstructors(
+      Number(body.id_course),
+      insturctorsID
+    );
+
+    if (!checkValidityCourse) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Instruktur tidak sesuai",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { date, time, title, description, file_url, tipe_tugas } = body;
 
     const due_date = new Date(`${date}T${time}`);
-    const data = { ...rest, due_date };
+    const data = {
+      id_instructors: insturctorsID,
+      title,
+      description,
+      file_url,
+      tipe_tugas,
+      due_date,
+      id_course: Number(body.id_course),
+    };
 
     //validate input
     await validateAssigmentInput(data);
