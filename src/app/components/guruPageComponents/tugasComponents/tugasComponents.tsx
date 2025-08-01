@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { HiCloudUpload, HiUser } from "react-icons/hi";
 import { FiFile } from "react-icons/fi";
+import { FiClock } from "react-icons/fi";
 
 type IDCProps = {
   id_course: number;
@@ -68,13 +69,12 @@ export default function TugasPages({ id_course }: IDCProps) {
       if (!fileUrl) {
         return;
       }
-
     }
 
     const payload = {
       id_course,
       ...formData,
-      file_url: fileUrl
+      file_url: fileUrl,
     };
 
     const res = await fetch("/api/instructors/courses/assigments", {
@@ -254,8 +254,8 @@ export default function TugasPages({ id_course }: IDCProps) {
             </div>
           </div>
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="flex items-start space-x-4 mb-4">
+            <div className="bg-white rounded-xl shadow-sm p-6 mb-5">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
                 Informasi Kelas
               </h2>
               <div className="flex items-start space-x-4 mb-4">
@@ -274,6 +274,37 @@ export default function TugasPages({ id_course }: IDCProps) {
                   <div className="flex items-center mt-1">
                     <HiUser className="mr-2" />
                     <span className="text-xs text-gray-500">20 Siswa</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Daftar Tugas
+              </h2>
+              <div className="space-y-3">
+                <div className="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
+                  <h3 className="font-medium text-sm text-gray-900 mb-1">
+                    Tugas Pemrograman
+                  </h3>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>Dikumpulkan: 25/28</span>
+                    <span>20 Agustus 2025</span>
+                  </div>
+                  <div className="flex items-center text-xs text-red-500 mt-1">
+                    <FiClock className="mr-1" />
+                    Deadline:{" "}
+                    <span className="ml-1 text-gray-700 font-medium">
+                      22-08-2025 23.59
+                    </span>
+                  </div>
+                  <div className="mt-4 text-right">
+                    <Link href="/tugas/1">
+                      <button className="text-sm bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-sm transition">
+                        Detail
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
