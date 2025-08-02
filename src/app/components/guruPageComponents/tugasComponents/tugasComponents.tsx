@@ -4,12 +4,15 @@ import Link from "next/link";
 import { HiCloudUpload, HiUser } from "react-icons/hi";
 import { FiFile } from "react-icons/fi";
 import { FiClock } from "react-icons/fi";
+import { assignmentsSummaryType } from "@/app/lib/types/assignmentsSummary";
+import { format } from "date-fns";
 
 type IDCProps = {
   id_course: number;
+  assignments: assignmentsSummaryType[];
 };
 
-export default function TugasPages({ id_course }: IDCProps) {
+export default function TugasPages({ id_course, assignments }: IDCProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -283,30 +286,55 @@ export default function TugasPages({ id_course }: IDCProps) {
               <h2 className="text-xl font-semibold mb-4 text-gray-800">
                 Daftar Tugas
               </h2>
-              <div className="space-y-3">
-                <div className="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
-                  <h3 className="font-medium text-sm text-gray-900 mb-1">
-                    Tugas Pemrograman
-                  </h3>
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>Dikumpulkan: 25/28</span>
-                    <span>20 Agustus 2025</span>
-                  </div>
-                  <div className="flex items-center text-xs text-red-500 mt-1">
-                    <FiClock className="mr-1" />
-                    Deadline:{" "}
-                    <span className="ml-1 text-gray-700 font-medium">
-                      22-08-2025 23.59
-                    </span>
-                  </div>
-                  <div className="mt-4 text-right">
-                    <Link href="/tugas/1">
-                      <button className="text-sm bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-sm transition">
-                        Detail
-                      </button>
-                    </Link>
-                  </div>
-                </div>
+
+              <div className="space-y-4">
+                {assignments.length === 0 ? (
+                  <p className="text-gray-600">Belum ada tugas.</p>
+                ) : (
+                  assignments.map((assignment) => (
+                    <div
+                      key={assignment.id_assigment}
+                      className="p-4 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors"
+                    >
+                      <h3 className="font-semibold text-lg text-gray-900 mb-1 truncate">
+                        {assignment.title}
+                      </h3>
+
+                      <p className="text-gray-700 text-sm mb-2 line-clamp-2">
+                        {assignment.description}
+                      </p>
+
+                      <div className="flex justify-between text-xs text-gray-500 mb-2">
+                        <span>
+                          Dibuat:{" "}
+                          {format(
+                            new Date(assignment.created_at),
+                            "dd/MM/yyyy"
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-xs text-red-500 mb-2">
+                        <FiClock className="mr-1" />
+                        Deadline waktu:{" "}
+                        <span className="ml-1 text-gray-700 font-medium">
+                          {format(
+                            new Date(assignment.due_date),
+                            "dd/MM/yyyy HH:mm"
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="text-right">
+                        <Link href={`/tugas/${assignment.id_assigment}`}>
+                          <button className="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition">
+                            Detail
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

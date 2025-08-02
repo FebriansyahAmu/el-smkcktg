@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+import { getAssignmentsSummaryDTO } from "../dto/assignmentsDTO";
 
 interface AssigmentsInput {
   id_course: number;
@@ -23,5 +24,60 @@ export class AssigmentsDAL {
         tipe_tugas: input.tipe_tugas,
       },
     });
+  }
+
+  async isAssignmentsOwnedByInstructors(
+    assignmentsId: number,
+    id_instructor: number
+  ) {
+    if (!assignmentsId || !id_instructor) return false;
+
+    const assignments = await prisma.el_assigments.findFirst({
+      where: {
+        id_assigment: assignmentsId,
+        id_instructors: id_instructor,
+      },
+      select: {
+        id_assigment: true,
+      },
+    });
+
+    return !!assignments;
+  }
+
+  async getAssignmentsSummaryByInstructors(
+    idCourse: number,
+    id_instructor: number
+  ): Promise<getAssignmentsSummaryDTO[]> {
+    try {
+      const assignments = await prisma.el_assigments.findMany({
+        where: {
+          id_course: idCourse,
+          id_instructors: id_instructor,
+        },
+        select: {
+          id_assigment: true,
+          title: true,
+          description: true,
+          due_date: true,
+          created_at: true,
+        },
+      });
+
+      return assignments.map((data) => ({
+        id_assigment: data.id_assigment,
+        title: data.title,
+        description: data.description,
+        due_date: data.due_date,
+        created_at: data.created_at,
+      }));
+    } catch (err: unknown) {
+      console.error("Error get data", err);
+      if (process.env.NODE_ENV === "production") {
+        return [];
+      } else {
+        throw err;
+      }
+    }
   }
 }
