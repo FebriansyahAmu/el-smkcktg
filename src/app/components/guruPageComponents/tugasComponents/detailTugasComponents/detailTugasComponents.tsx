@@ -6,12 +6,13 @@ import { DetailAssignmentsType } from "@/app/lib/types/detailAssignments";
 import { FiTrash2, FiEdit2, FiCheckCircle } from "react-icons/fi";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
 import Link from "next/link";
+import { format } from "date-fns";
 
 type DetailTugasProps = {
-  assignments: DetailAssignmentsType[];
+  assignments: DetailAssignmentsType;
 };
 
-export default function DetailAssignments() {
+export default function DetailAssignments({ assignments }: DetailTugasProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -72,10 +73,11 @@ export default function DetailAssignments() {
                   {/* Judul tugas */}
                   <div className="mb-6">
                     <h3 className="text-lg font-medium text-gray-800 mb-2">
-                      Tugas Pemograman
+                      {assignments.title}
                     </h3>
                     <p className="text-gray-500 text-sm">
-                      DIbuat: 01 Agustus 2025 - 10:20 WITA
+                      DIbuat Pada:{" "}
+                      {format(new Date(assignments.created_at), "dd-MM-yyyy")}
                     </p>
                   </div>
 
@@ -85,10 +87,7 @@ export default function DetailAssignments() {
                       Deskripsi tugas :
                     </h4>
                     <div className="max-w-none">
-                      <p>
-                        Buatlah penyelesaian lengkap untuk 5 soal persamaan
-                        kuadrat berikut dan kumpulkan dalam format PDF:
-                      </p>
+                      <p>{assignments.description}</p>
                     </div>
                   </div>
 
@@ -139,7 +138,9 @@ export default function DetailAssignments() {
                       <h4 className="font-medium text-gray-700 mb-2">
                         Tipe Tugas
                       </h4>
-                      <p className="text-gray-600">Tugas Individu</p>
+                      <p className="text-gray-600">
+                        Tugas: {assignments.tipe_tugas}
+                      </p>
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-700 mb-2">Status</h4>
@@ -152,7 +153,10 @@ export default function DetailAssignments() {
                         Tenggat Waktu
                       </h4>
                       <p className="text-red-600 font-medium">
-                        02 Agustus 2025 - 23:30 (Tersisa 1 hari)
+                        {format(
+                          new Date(assignments.due_date),
+                          "dd-MM-yyyy HH:mm"
+                        )}
                       </p>
                     </div>
                   </div>

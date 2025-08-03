@@ -1,5 +1,5 @@
 import GuruCourseTabs from "@/app/components/guruPageComponents/detailCourseComponents/detailCourseComponents";
-import GetAssignments from "@/app/services/getAssignments";
+import { GetAssignments } from "@/app/services/getAssignments";
 
 type IdCourseProps = {
   params: {

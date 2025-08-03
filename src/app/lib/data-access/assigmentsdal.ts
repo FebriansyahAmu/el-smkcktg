@@ -1,5 +1,8 @@
 import { prisma } from "@/app/lib/prisma";
-import { getAssignmentsSummaryDTO } from "../dto/assignmentsDTO";
+import {
+  getAssignmentsSummaryDTO,
+  getDetailAssignments,
+} from "../dto/assignmentsDTO";
 
 interface AssigmentsInput {
   id_course: number;
@@ -75,6 +78,38 @@ export class AssigmentsDAL {
       console.error("Error get data", err);
       if (process.env.NODE_ENV === "production") {
         return [];
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  async getAssignmentsDetail(
+    idAssigment: number,
+    id_instructor: number
+  ): Promise<getDetailAssignments | null> {
+    try {
+      const assignmentsDetail = await prisma.el_assigments.findFirst({
+        where: {
+          id_assigment: idAssigment,
+          id_instructors: id_instructor,
+        },
+        select: {
+          id_assigment: true,
+          title: true,
+          description: true,
+          due_date: true,
+          tipe_tugas: true,
+          file_url: true,
+          created_at: true,
+        },
+      });
+
+      return assignmentsDetail;
+    } catch (err: unknown) {
+      console.error("error get data", err);
+      if (process.env.NODE_ENV === "production") {
+        return null;
       } else {
         throw err;
       }
