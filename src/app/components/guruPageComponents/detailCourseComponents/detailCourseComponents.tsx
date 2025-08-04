@@ -11,11 +11,13 @@ import { assignmentsSummaryType } from "@/app/lib/types/assignmentsSummary";
 type CourseIDProps = {
   id_course: number;
   assignments: assignmentsSummaryType[];
+  enrollToken: string;
 };
 
 export default function GuruCourseTabs({
   id_course,
   assignments,
+  enrollToken,
 }: CourseIDProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -43,7 +45,7 @@ export default function GuruCourseTabs({
               <TugasPages id_course={id_course} assignments={assignments} />
             </TabItem>
             <TabItem title="Murid">
-              <Murid id_course={id_course} />
+              <Murid id_course={id_course} enrollments_token={enrollToken} />
             </TabItem>
             <TabItem title="Daftar Hadir">Tugas</TabItem>
           </Tabs>

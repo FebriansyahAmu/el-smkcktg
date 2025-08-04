@@ -8,9 +8,10 @@ import {
 
 type ModulProps = {
   id_course: number;
+  enrollments_token: string;
 };
 
-const Murid = ({ id_course }: ModulProps) => {
+const Murid = ({ id_course, enrollments_token }: ModulProps) => {
   const handleGenerateToken = async () => {
     const res = await fetch(`/api/courses/${id_course}/generateToken`, {
       method: "POST",
@@ -24,7 +25,7 @@ const Murid = ({ id_course }: ModulProps) => {
         <input
           type="text"
           id="enrollment-token"
-          value="SC-M00721B"
+          value={enrollments_token}
           readOnly
           className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-sm px-4 py-2 w-64 cursor-default"
         />

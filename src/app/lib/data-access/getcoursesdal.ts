@@ -100,6 +100,38 @@ export class CourseDAL {
     return course;
   }
 
+  async isCourseOwnedByInstructors(idCourse: number, id_instructor: number) {
+    if (!idCourse || !id_instructor) return false;
+
+    const courses = await prisma.el_courses.findFirst({
+      where: {
+        id_course: idCourse,
+        id_instructors: id_instructor,
+      },
+      select: {
+        id_course: true,
+      },
+    });
+
+    return !!courses;
+  }
+
+  async getEnrolledTokens(idCourse: number, id_instructor: number) {
+    if (!idCourse || !id_instructor) return false;
+
+    const token = await prisma.el_courses.findFirst({
+      where: {
+        id_course: idCourse,
+        id_instructors: id_instructor,
+      },
+      select: {
+        enrollments_token: true,
+      },
+    });
+
+    return token;
+  }
+
   async getAllDataCourseIns(id_instructors?: number): Promise<getCoursesDTO[]> {
     try {
       const courses = await prisma.el_courses.findMany({
