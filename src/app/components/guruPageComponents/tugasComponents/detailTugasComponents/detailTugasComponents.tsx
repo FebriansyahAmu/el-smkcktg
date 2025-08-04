@@ -7,6 +7,7 @@ import { FiTrash2, FiEdit2, FiCheckCircle } from "react-icons/fi";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
 import Link from "next/link";
 import { format } from "date-fns";
+import { getFileMeta } from "@/app/utils/getFileMeta";
 
 type DetailTugasProps = {
   assignments: DetailAssignmentsType;
@@ -92,45 +93,44 @@ export default function DetailAssignments({ assignments }: DetailTugasProps) {
                   </div>
 
                   {/* Lampiran files */}
-                  <div className="mb-6">
-                    <h4 className="font-medium text-gray-700 mb-3">Lampiran</h4>
-                    <div className="space-x-y">
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 mb-2">
-                        <div className="flex items-center">
-                          <FaFilePdf className="text-red-500 text-xl mr-3" />
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">
-                              Soal Intruksi Pembuatan
-                            </p>
-                            <p className="text-xs text-gray-500">2.4 MB</p>
+                  {assignments.file_url && (
+                    <div className="mb-6">
+                      <h4 className="font-medium text-gray-700 mb-3">
+                        Lampiran
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="flex items-center">
+                            {getFileMeta(assignments.file_url).icon}
+                            <div>
+                              <p className="text-sm font-medium text-gray-700">
+                                {getFileMeta(assignments.file_url).label}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Klik untuk melihat atau unduh
+                              </p>
+
+                              {getFileMeta(assignments.file_url).isImage && (
+                                <img
+                                  src={assignments.file_url}
+                                  alt="Lampiran"
+                                  className="mt-2 w-48 rounded border"
+                                />
+                              )}
+                            </div>
                           </div>
+                          <Link
+                            href={assignments.file_url}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            className="text-blue-500 hover:text-blue-800 text-sm"
+                          >
+                            Unduh
+                          </Link>
                         </div>
-                        <Link
-                          href={`#`}
-                          className="text-blue-500 hover:text-blue-800 text-sm"
-                        >
-                          Unduh
-                        </Link>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 mb-2">
-                        <div className="flex items-center">
-                          <FaFileWord className="text-blue-500 text-xl mr-3" />
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">
-                              Template
-                            </p>
-                            <p className="text-xs text-gray-500">2.4 MB</p>
-                          </div>
-                        </div>
-                        <Link
-                          href={`#`}
-                          className="text-blue-500 hover:text-blue-800 text-sm"
-                        >
-                          Unduh
-                        </Link>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Detail tugas */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

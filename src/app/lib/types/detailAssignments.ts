@@ -4,6 +4,6 @@ export type DetailAssignmentsType = {
   description: string;
   due_date: Date;
   tipe_tugas: string;
-  file_url: string | null;
+  file_url: string;
   created_at: Date;
 };

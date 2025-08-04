@@ -326,7 +326,9 @@ export default function TugasPages({ id_course, assignments }: IDCProps) {
                       </div>
 
                       <div className="text-right">
-                        <Link href={`/tugas/${assignment.id_assigment}`}>
+                        <Link
+                          href={`${id_course}/tugas/${assignment.id_assigment}`}
+                        >
                           <button className="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition">
                             Detail
                           </button>
