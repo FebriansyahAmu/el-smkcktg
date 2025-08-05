@@ -17,7 +17,7 @@ export default function MuridPageTugas() {
             </Link>
             <HiChevronRight className="mx-2 w-4 h-4" />
             <Link href={``} className="hover:text-indigo-600">
-              Tugas
+              Detail Tugas
             </Link>
           </div>
         </section>

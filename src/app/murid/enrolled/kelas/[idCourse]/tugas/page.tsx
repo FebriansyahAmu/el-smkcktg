@@ -1,4 +1,4 @@
-import MuridPageTugas from "@/app/components/muridPageComponents/muridPageAssignments/muridPageAssignments";
+import MuridTugasPageCore from "@/app/components/muridPageComponents/muridPageAssignments/muridPageAssignmentsCore";
 
 type PropsParams = {
   params: {
@@ -6,6 +6,6 @@ type PropsParams = {
   };
 };
 
-export default function Tugas({ params }: PropsParams) {
-  return <MuridPageTugas />;
+export default function TugasMurid({ params }: PropsParams) {
+  return <MuridTugasPageCore />;
 }
