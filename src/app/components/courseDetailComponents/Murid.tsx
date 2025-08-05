@@ -21,7 +21,7 @@ const Murid = ({ id_course, enrollments_token }: ModulProps) => {
   };
   return (
     <>
-      <div className="flex justify-end space-x-2 mt-4">
+      <div className="flex justify-end space-x-2 mt-4 ">
         <input
           type="text"
           id="enrollment-token"

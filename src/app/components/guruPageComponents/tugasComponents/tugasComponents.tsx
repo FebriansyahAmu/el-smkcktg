@@ -96,7 +96,7 @@ export default function TugasPages({ id_course, assignments }: IDCProps) {
   };
 
   return (
-    <div className="flex-1 mt-4 mb-8 max-w-7xl">
+    <div className="flex-1 mt-4 mb-8 p-4 max-w-7xl mx-auto">
       <section className="w-full flex justify-between items-center mb-8">
         <div>
           <h3 className="text-3xl font-semibold text-gray-900">
