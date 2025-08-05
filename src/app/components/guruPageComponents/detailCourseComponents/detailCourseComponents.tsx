@@ -7,6 +7,7 @@ import Murid from "@/app/components/courseDetailComponents/Murid";
 import TugasPages from "../tugasComponents/tugasComponents";
 import { TabItem, Tabs } from "flowbite-react";
 import { assignmentsSummaryType } from "@/app/lib/types/assignmentsSummary";
+import DaftarHadir from "../daftarHadirComponents/daftarHadir";
 
 type CourseIDProps = {
   id_course: number;
@@ -47,7 +48,9 @@ export default function GuruCourseTabs({
             <TabItem title="Murid">
               <Murid id_course={id_course} enrollments_token={enrollToken} />
             </TabItem>
-            <TabItem title="Daftar Hadir">Tugas</TabItem>
+            <TabItem title="Daftar Hadir">
+              <DaftarHadir id_course={id_course} />
+            </TabItem>
           </Tabs>
         </main>
       </div>
